@@ -19,7 +19,7 @@ function Box(props) {
       sensor.addEventListener("error", (event) => {
         // Handle runtime errors.
         if (event.error.name === "NotAllowedError") {
-          // Branch to code for requesting permission.
+          // Need to request permissions
           Promise.all([
             navigator.permissions.query({ name: "accelerometer" }),
             navigator.permissions.query({ name: "magnetometer" }),
@@ -40,7 +40,6 @@ function Box(props) {
     } catch (error) {
       // Handle construction errors.
       if (error.name === "SecurityError") {
-        // See the note above about feature policy.
         console.log("Sensor construction was blocked by a feature policy.");
       } else if (error.name === "ReferenceError") {
         console.log("Sensor is not supported by the User Agent.");
@@ -60,13 +59,13 @@ function Box(props) {
     <mesh
       {...props}
       ref={ref}
-      scale={active ? 2 : 1.5}
+      scale={2}
       onClick={(event) => setActive(!active)}
       onPointerOver={(event) => setHover(true)}
       onPointerOut={(event) => setHover(false)}
     >
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? "hotpink" : "tomato"} />
+      <meshStandardMaterial color={"seagreen"} />
     </mesh>
   );
 }
@@ -77,7 +76,7 @@ export default function Demo() {
       <main className={styles.main}>
         <Canvas>
           <ambientLight />
-          <pointLight position={[10, 10, 10]} />
+          <pointLight position={[10, 20, 30]} />
           <Box position={[0, 0, 0]} />
         </Canvas>
       </main>
