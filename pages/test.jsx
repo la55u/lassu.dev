@@ -27,12 +27,15 @@ function Box(props) {
           ]).then((results) => {
             if (results.every((result) => result.state === "granted")) {
               console.log("Permission granted.");
+              //alert("Permission granted.");
             } else {
-              console.log("No permissions to use AbsoluteOrientationSensor.");
+              //console.log("No permissions to use AbsoluteOrientationSensor.");
+              alert("No permissions to use AbsoluteOrientationSensor.");
             }
           });
         } else if (event.error.name === "NotReadableError") {
-          console.log("Cannot connect to the sensor.");
+          //console.log("Cannot connect to the sensor.");
+          alert("Cannot connect to the sensor.");
         }
       });
       sensor.addEventListener("reading", handleSensor);
@@ -40,9 +43,11 @@ function Box(props) {
     } catch (error) {
       // Handle construction errors.
       if (error.name === "SecurityError") {
-        console.log("Sensor construction was blocked by a feature policy.");
+        //console.log("Sensor construction was blocked by a feature policy.");
+        alert("Sensor construction was blocked by a feature policy.");
       } else if (error.name === "ReferenceError") {
-        console.log("Sensor is not supported by the User Agent.");
+        //console.log("Sensor is not supported by the User Agent.");
+        alert("Sensor is not supported by the User Agent.");
       } else {
         throw error;
       }
