@@ -7,6 +7,7 @@ import {
   World,
   Mouse,
   MouseConstraint,
+  Common,
 } from "matter-js";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -69,6 +70,7 @@ function setupPhysics() {
   var updateGravity = function (event) {
     var orientation = typeof window.orientation !== "undefined" ? window.orientation : 0,
       gravity = engine.gravity;
+    //alert("orientation:", orientation);
 
     if (orientation === 0) {
       gravity.x = Common.clamp(event.gamma, -90, 90) / 90;
