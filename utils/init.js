@@ -46,7 +46,14 @@ function setupPhysics() {
     window.innerWidth,
     50
   );
-  objects.push(ground);
+  const leftWall = new Boundary(0, window.innerHeight / 2, 50, window.innerHeight);
+  const rightWall = new Boundary(
+    window.innerWidth,
+    window.innerHeight / 2,
+    50,
+    window.innerHeight
+  );
+  objects.push(ground, leftWall, rightWall);
 
   World.add(world, [...objects]);
 
