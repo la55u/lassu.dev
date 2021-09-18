@@ -67,7 +67,6 @@ function setupPhysics() {
   // add gyro control
 
   var updateGravity = function (event) {
-    alert("orientation changed");
     var orientation = typeof window.orientation !== "undefined" ? window.orientation : 0,
       gravity = engine.gravity;
 
