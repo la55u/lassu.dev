@@ -1,6 +1,10 @@
 import { Canvas } from "@react-three/fiber";
 import React, { useEffect, useRef, useState } from "react";
 import styles from "../styles/Home.module.css";
+import * as Matter from "matter-js";
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { init } from "../utils/init";
 
 let sensor = null;
 
@@ -10,8 +14,6 @@ function Box(props) {
   // Set up state for the hovered and active state
   const [hovered, setHover] = useState(false);
   const [active, setActive] = useState(false);
-
-  // useFrame()
 
   useEffect(() => {
     try {
@@ -59,7 +61,6 @@ function Box(props) {
     ref.current.quaternion.fromArray(quaternion).invert();
   }
 
-  // Return the view, these are regular Threejs elements expressed in JSX
   return (
     <mesh
       {...props}
@@ -76,15 +77,9 @@ function Box(props) {
 }
 
 export default function Demo() {
-  return (
-    <div className={styles.container}>
-      <main className={styles.main}>
-        <Canvas>
-          <ambientLight />
-          <pointLight position={[10, 20, 30]} />
-          <Box position={[0, 0, 0]} />
-        </Canvas>
-      </main>
-    </div>
-  );
+  useEffect(() => {
+    init();
+  }, []);
+
+  return <canvas className="webgl">{/* <Box position={[0, 0, 0]} /> */}</canvas>;
 }

@@ -2,10 +2,12 @@ html,
 body {
   padding: 0;
   margin: 0;
+}
+
+body {
   font-family: "JetBrains Mono", monospace;
   background-color: black;
   color: gainsboro;
-
   background: linear-gradient(90deg, black 34px, transparent 1%) center,
     linear-gradient(black 34px, transparent 1%) center, rgb(0, 206, 209, 0.5);
   background-size: 35px 35px;
