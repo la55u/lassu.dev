@@ -20,4 +20,11 @@ canvas.webgl {
   left: 0;
   outline: none;
   background: linear-gradient(90deg, #34f7be 0, #61fd5a) !important;
+  z-index: -1;
+}
+
+#stat {
+  color: black;
+  font-size: 1.4rem;
+  margin-top: 90px;
 }

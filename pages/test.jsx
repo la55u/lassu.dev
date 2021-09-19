@@ -53,5 +53,10 @@ export default function Demo() {
     init();
   }, []);
 
-  return <canvas className="webgl">{/* <Box position={[0, 0, 0]} /> */}</canvas>;
+  return (
+    <>
+      <div id="stat" />
+      <canvas className="webgl" />
+    </>
+  );
 }

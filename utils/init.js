@@ -19,6 +19,9 @@ import { getRandom, toEuler } from "./helpers";
 export var engine, world, renderer;
 export var objects = [];
 
+// set during calibration
+var initialPos = null;
+
 function setupPhysics() {
   engine = Engine.create();
   world = engine.world;
@@ -96,11 +99,18 @@ function setupPhysics() {
 
   World.add(world, [...objects, mouseConstraint]);
 
+  // sensor API
   useSensor(handleSensor);
   function handleSensor(event) {
     const { quaternion } = event.target;
     const [yaw, roll] = toEuler(quaternion);
     console.log(yaw, roll);
+
+    if (!initialPos) initialPos = [yaw, roll];
+
+    const stat = `Yaw: ${yaw.toFixed(3)}<br/>Roll: ${roll.toFixed(2)}`;
+    document.getElementById("stat").innerHTML = stat;
+
     const gravity = engine.gravity;
     gravity.x = Common.clamp(yaw, -Math.PI / 2, Math.PI / 2) / (Math.PI / 2);
     //gravity.y = Common.clamp(roll, -Math.PI / 2, Math.PI / 2) / (Math.PI / 2);
