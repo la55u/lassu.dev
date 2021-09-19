@@ -113,8 +113,8 @@ function setupPhysics() {
     const stat = `Yaw (Z): ${yaw.toFixed(2)}<br>
                   Roll (X): ${roll.toFixed(2)}<br>
                   Pitch (Y): ${pitch.toFixed(2)}<br>
-                  Gx:   ${Gx.toFixed(3)}<br>
-                  Gy:   ${Gy.toFixed(3)}`;
+                  Gx:   ${Gx.toFixed(2)}<br>
+                  Gy:   ${Gy.toFixed(2)}`;
     document.getElementById("stat").innerHTML = stat;
 
     const gravity = engine.gravity;
