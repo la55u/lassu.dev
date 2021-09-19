@@ -108,13 +108,18 @@ function setupPhysics() {
 
     if (!initialPos) initialPos = [yaw, roll];
 
-    const stat = `Yaw: ${yaw.toFixed(3)}<br/>Roll: ${roll.toFixed(2)}`;
+    const Gx = Common.clamp(yaw, -Math.PI / 2, Math.PI / 2) / (Math.PI / 2);
+    const Gy = 1;
+    const stat = `Yaw:  ${yaw.toFixed(3)}<br>
+                  Roll: ${roll.toFixed(2)}<br>
+                  Gx:   ${Gx.toFixed(3)}<br>
+                  Gy:   ${Gy.toFixed(3)}`;
     document.getElementById("stat").innerHTML = stat;
 
     const gravity = engine.gravity;
-    gravity.x = Common.clamp(yaw, -Math.PI / 2, Math.PI / 2) / (Math.PI / 2);
+    gravity.x = Gx;
     //gravity.y = Common.clamp(roll, -Math.PI / 2, Math.PI / 2) / (Math.PI / 2);
-    gravity.y = 0;
+    gravity.y = Gy;
   }
 
   // add gyro control
