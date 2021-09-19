@@ -43,17 +43,23 @@ function setupPhysics() {
   engine = Engine.create();
   world = engine.world;
   objects.push(new Circle(400, 0, 40));
+  const wallThickness = 50;
   const ground = new Boundary(
     window.innerWidth / 2,
-    window.innerHeight,
+    window.innerHeight + wallThickness / 2,
     window.innerWidth,
-    50
+    wallThickness
   );
-  const leftWall = new Boundary(0, window.innerHeight / 2, 50, window.innerHeight);
-  const rightWall = new Boundary(
-    window.innerWidth,
+  const leftWall = new Boundary(
+    0 - wallThickness / 2,
     window.innerHeight / 2,
-    50,
+    wallThickness,
+    window.innerHeight
+  );
+  const rightWall = new Boundary(
+    window.innerWidth + wallThickness / 2,
+    window.innerHeight / 2,
+    wallThickness,
     window.innerHeight
   );
 
@@ -114,7 +120,8 @@ function setupPhysics() {
   // add gyro control
 
   var updateGravity = function (event) {
-    var orientation = typeof window.orientation !== "undefined" ? window.orientation : 0,
+    if (!window.orientation) return null;
+    const orientation = window.orientation,
       gravity = engine.gravity;
     console.log("orientation event:", event);
 
