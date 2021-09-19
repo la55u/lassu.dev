@@ -8,6 +8,9 @@ import {
   Mouse,
   MouseConstraint,
   Common,
+  Composites,
+  Body,
+  Constraint,
 } from "matter-js";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -53,7 +56,43 @@ function setupPhysics() {
     50,
     window.innerHeight
   );
-  objects.push(ground, leftWall, rightWall);
+
+  // add bridge
+  var group = Body.nextGroup(true);
+  var bridge = Composites.stack(160, 290, 15, 1, 0, 0, function (x, y) {
+    return Bodies.rectangle(x - 20, y, 53, 20, {
+      collisionFilter: { group: group },
+      chamfer: 5,
+      density: 0.005,
+      frictionAir: 0.05,
+      render: {
+        fillStyle: "#060a19",
+      },
+    });
+  });
+  Composites.chain(bridge, 0.3, 0, -0.3, 0, {
+    stiffness: 1,
+    length: 0,
+    render: {
+      visible: true,
+    },
+  });
+  const p1 = Constraint.create({
+    pointA: { x: 140, y: 300 },
+    bodyB: bridge.bodies[0],
+    pointB: { x: -25, y: 0 },
+    length: 2,
+    stiffness: 0.9,
+  });
+  const p2 = Constraint.create({
+    pointA: { x: 660, y: 300 },
+    bodyB: bridge.bodies[bridge.bodies.length - 1],
+    pointB: { x: 25, y: 0 },
+    length: 2,
+    stiffness: 0.9,
+  });
+
+  objects.push(ground, leftWall, rightWall, bridge, p1, p2);
 
   World.add(world, [...objects]);
 
@@ -77,7 +116,7 @@ function setupPhysics() {
   var updateGravity = function (event) {
     var orientation = typeof window.orientation !== "undefined" ? window.orientation : 0,
       gravity = engine.gravity;
-    //alert("orientation:", orientation);
+    console.log("orientation:", orientation);
 
     if (orientation === 0) {
       gravity.x = Common.clamp(event.gamma, -90, 90) / 90;
