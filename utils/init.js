@@ -103,15 +103,16 @@ function setupPhysics() {
   useSensor(handleSensor);
   function handleSensor(event) {
     const { quaternion } = event.target;
-    const [yaw, roll] = toEuler(quaternion);
-    console.log(yaw, roll);
+    const [yaw, roll, pitch] = toEuler(quaternion);
+    console.log(yaw, roll, pitch);
 
     if (!initialPos) initialPos = [yaw, roll];
 
-    const Gx = Common.clamp(yaw, -Math.PI / 2, Math.PI / 2) / (Math.PI / 2);
+    const Gx = (-1 * Common.clamp(yaw, -Math.PI / 2, Math.PI / 2)) / (Math.PI / 2);
     const Gy = 1;
-    const stat = `Yaw:  ${yaw.toFixed(3)}<br>
-                  Roll: ${roll.toFixed(2)}<br>
+    const stat = `Yaw (Z): ${yaw.toFixed(3)}<br>
+                  Roll (X): ${roll.toFixed(2)}<br>
+                  Pitch (Y): ${pitch.toFixed(3)}<br>
                   Gx:   ${Gx.toFixed(3)}<br>
                   Gy:   ${Gy.toFixed(3)}`;
     document.getElementById("stat").innerHTML = stat;
