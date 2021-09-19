@@ -17,12 +17,6 @@ export class Circle {
     this.body = Bodies.circle(x, y, r, options);
     World.add(world, this.body);
 
-    // three
-    this.geometry = new THREE.CircleGeometry(0.1, 20);
-    this.material = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true });
-    this.mesh = new THREE.Mesh(this.geometry, this.material);
-    scene.add(this.mesh);
-
     console.log("new cirlce:", this.body);
   }
 

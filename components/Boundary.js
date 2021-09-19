@@ -16,12 +16,6 @@ export class Boundary {
     this.body = Bodies.rectangle(x, y, w, h, options);
     World.add(world, this.body);
 
-    // three
-    this.geometry = new THREE.PlaneGeometry(1, 1);
-    this.material = new THREE.MeshBasicMaterial({ color: 0x808080 });
-    this.mesh = new THREE.Mesh(this.geometry, this.material);
-    scene.add(this.mesh);
-
     console.log("new boundary:", this.body);
   }
 
