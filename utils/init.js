@@ -141,7 +141,7 @@ function setupPhysics() {
   };
 
   if (window.DeviceOrientationEvent) {
-    window.addEventListener("deviceorientation", updateGravity);
+    //window.addEventListener("deviceorientation", updateGravity);
   } else {
     alert("DeviceOrientationEvent not available");
   }
