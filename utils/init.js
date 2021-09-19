@@ -116,7 +116,7 @@ function setupPhysics() {
   var updateGravity = function (event) {
     var orientation = typeof window.orientation !== "undefined" ? window.orientation : 0,
       gravity = engine.gravity;
-    console.log("orientation:", orientation);
+    console.log("orientation event:", event);
 
     if (orientation === 0) {
       gravity.x = Common.clamp(event.gamma, -90, 90) / 90;
