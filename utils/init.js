@@ -14,7 +14,7 @@ import {
 import { Boundary } from "../components/Boundary";
 import { Circle } from "../components/Circle";
 import { useSensor } from "../pages/test";
-import { getRandom, toEuler } from "./helpers";
+import { getRandom, radToDeg, toEuler } from "./helpers";
 
 export var engine, world, renderer;
 export var objects = [];
@@ -110,9 +110,9 @@ function setupPhysics() {
 
     const Gx = (-1 * Common.clamp(yaw, -Math.PI / 2, Math.PI / 2)) / (Math.PI / 2);
     const Gy = 1;
-    const stat = `Yaw (Z): ${yaw.toFixed(2)}<br>
-                  Roll (X): ${roll.toFixed(2)}<br>
-                  Pitch (Y): ${pitch.toFixed(2)}<br>
+    const stat = `Yaw (Z): ${radToDeg(yaw).toFixed(2)}<br>
+                  Roll (X): ${radToDeg(roll).toFixed(2)}<br>
+                  Pitch (Y): ${radToDeg(pitch).toFixed(2)}<br>
                   Gx:   ${Gx.toFixed(2)}<br>
                   Gy:   ${Gy.toFixed(2)}`;
     document.getElementById("stat").innerHTML = stat;
