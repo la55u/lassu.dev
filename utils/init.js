@@ -46,7 +46,7 @@ function initSensor() {
       }
     });
     sensor.addEventListener("reading", () => {
-      alert(sensor);
+      alert(JSON.stringify(sensor));
     });
     sensor.start();
   } catch (error) {
