@@ -59,7 +59,7 @@ export function toEuler(q) {
 }
 
 // Returns the absolute value of the first number, but the sign of the second.
-const copySign = (x, y) => (Math.sign(x) === Math.sign(y) ? x : -x);
+export const copySign = (x, y) => (Math.sign(x) === Math.sign(y) ? x : -x);
 
 // converts radians to degrees
 export const radToDeg = (rad) => (rad * 180) / Math.PI;

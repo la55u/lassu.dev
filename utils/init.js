@@ -13,7 +13,7 @@ import {
 } from "matter-js";
 import { Boundary } from "../components/Boundary";
 import { Circle } from "../components/Circle";
-import { getRandom, radToDeg, toEuler } from "./helpers";
+import { copySign, getRandom, radToDeg, toEuler } from "./helpers";
 
 export var engine, world, renderer;
 export var objects = [];
@@ -50,12 +50,12 @@ function initSensor() {
       const [yaw, roll, pitch] = toEuler(quaternion);
       console.log(yaw, roll, pitch);
       const Gx = (-1 * Common.clamp(yaw, -Math.PI / 2, Math.PI / 2)) / (Math.PI / 2);
-      const Gy = Common.clamp(roll, -Math.PI, Math.PI);
+      const Gy = roll * 1.2; // random scale
       const stat = `Yaw (Z): ${radToDeg(yaw).toFixed(2)}<br>
                       Roll (X, β): ${radToDeg(roll).toFixed(2)}<br>
-                      Pitch (Y) : ${radToDeg(pitch).toFixed(2)}<br>
-                      Gx:   ${Gx.toFixed(2)}<br>
-                      Gy:   ${Gy.toFixed(2)}`;
+                      Pitch (Y): ${radToDeg(pitch).toFixed(2)}<br>
+                      Gx: ${Gx.toFixed(2)}<br>
+                      Gy: ${Gy.toFixed(2)}`;
 
       document.getElementById("stat").innerHTML = stat;
       const gravity = engine.gravity;
