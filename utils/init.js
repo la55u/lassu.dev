@@ -18,19 +18,19 @@ import { getRandom, radToDeg, toEuler } from "./helpers";
 export var engine, world, renderer;
 export var objects = [];
 
-let sensor = null;
+let sensor;
 
 function initSensor() {
   try {
-    sensor = new Accelerometer({ frequency: 60 });
+    sensor = new RelativeOrientationSensor({ frequency: 60, referenceFrame: "screen" });
     sensor.addEventListener("error", (event) => {
       // Handle runtime errors.
       if (event.error.name === "NotAllowedError") {
         // Need to request permissions
         Promise.all([
           navigator.permissions.query({ name: "accelerometer" }),
-          // navigator.permissions.query({ name: "magnetometer" }),
-          // navigator.permissions.query({ name: "gyroscope" }),
+          //navigator.permissions.query({ name: "magnetometer" }),
+          navigator.permissions.query({ name: "gyroscope" }),
         ]).then((results) => {
           if (results.every((result) => result.state === "granted")) {
             console.log("Permission granted.");
@@ -45,9 +45,22 @@ function initSensor() {
         alert("Cannot connect to the sensor.");
       }
     });
-    sensor.addEventListener("reading", () => {
-      const stat = JSON.stringify(sensor, null, 2);
+    sensor.addEventListener("reading", (event) => {
+      const { quaternion } = event.target;
+      const [yaw, roll, pitch] = toEuler(quaternion);
+      console.log(yaw, roll, pitch);
+      const Gx = (-1 * Common.clamp(yaw, -Math.PI / 2, Math.PI / 2)) / (Math.PI / 2);
+      const Gy = Common.clamp(pitch, -Math.PI / 2, Math.PI / 2) / (Math.PI / 2);
+      const stat = `Yaw (Z): ${radToDeg(yaw).toFixed(2)}<br>
+                      Roll (X, β): ${radToDeg(roll).toFixed(2)}<br>
+                      Pitch (Y) : ${radToDeg(pitch).toFixed(2)}<br>
+                      Gx:   ${Gx.toFixed(2)}<br>
+                      Gy:   ${Gy.toFixed(2)}`;
+
       document.getElementById("stat").innerHTML = stat;
+      const gravity = engine.gravity;
+      gravity.x = Gx;
+      gravity.y = Gy;
     });
     sensor.start();
   } catch (error) {
