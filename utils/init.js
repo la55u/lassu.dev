@@ -49,7 +49,7 @@ function initSensor() {
       const { quaternion } = event.target;
       const [yaw, roll, pitch] = toEuler(quaternion);
       console.log(yaw, roll, pitch);
-      const Gx = Common.clamp(pitch, -Math.PI / 2, Math.PI / 2) / (Math.PI / 2);
+      const Gx = Common.clamp(pitch * 1.5, -Math.PI / 2, Math.PI / 2) / (Math.PI / 2);
       const Gy = Common.clamp(roll * 1.2, -1, 1); // random scale
       const stat = `Yaw (Z): ${radToDeg(yaw).toFixed(2)}<br>
                       Roll (X, β): ${radToDeg(roll).toFixed(2)}<br>
