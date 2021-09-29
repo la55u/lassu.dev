@@ -1,6 +1,5 @@
 import { Bodies, Composite, World } from "matter-js";
-import { camera, scene, world } from "../utils/init";
-import * as THREE from "three";
+import { world } from "../utils/init";
 import { normalize } from "../utils/helpers";
 
 var options = {

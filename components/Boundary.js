@@ -1,6 +1,5 @@
 import { Bodies, Composite, World } from "matter-js";
 import { scene, world } from "../utils/init";
-import * as THREE from "three";
 import { normalize } from "../utils/helpers";
 
 const options = {
