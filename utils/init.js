@@ -49,8 +49,8 @@ function initSensor() {
       const { quaternion } = event.target;
       const [yaw, roll, pitch] = toEuler(quaternion);
       console.log(yaw, roll, pitch);
-      const Gx = (-1 * Common.clamp(yaw, -Math.PI / 2, Math.PI / 2)) / (Math.PI / 2);
-      const Gy = roll * 1.2; // random scale
+      const Gx = Common.clamp(pitch, -Math.PI / 2, Math.PI / 2) / (Math.PI / 2);
+      const Gy = Common.clamp(roll * 1.2, -1, 1); // random scale
       const stat = `Yaw (Z): ${radToDeg(yaw).toFixed(2)}<br>
                       Roll (X, β): ${radToDeg(roll).toFixed(2)}<br>
                       Pitch (Y): ${radToDeg(pitch).toFixed(2)}<br>
@@ -109,8 +109,8 @@ function setupPhysics() {
   var rope = Composites.stack(
     window.innerWidth / 2,
     window.innerHeight / 3,
-    3,
     1,
+    3,
     10,
     10,
     function (x, y) {
@@ -129,7 +129,7 @@ function setupPhysics() {
     bodyB: rope.bodies[0],
     pointB: { x: -25, y: 0 },
     pointA: { x: rope.bodies[0].position.x, y: rope.bodies[0].position.y },
-    stiffness: 0.5,
+    stiffness: 0.9,
   });
 
   objects.push(ground, leftWall, rightWall, rope, p1);
