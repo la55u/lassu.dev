@@ -109,7 +109,7 @@ function setupPhysics() {
   var rope = Composites.stack(
     window.innerWidth / 2,
     window.innerHeight / 3,
-    5,
+    3,
     1,
     10,
     10,
