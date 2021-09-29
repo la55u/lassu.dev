@@ -104,42 +104,35 @@ function setupPhysics() {
     window.innerHeight
   );
 
-  // add bridge
+  // add rope component
   var group = Body.nextGroup(true);
-  var bridge = Composites.stack(160, 290, 15, 1, 0, 0, function (x, y) {
-    return Bodies.rectangle(x - 20, y, 53, 20, {
-      collisionFilter: { group: group },
-      chamfer: 5,
-      density: 0.005,
-      frictionAir: 0.05,
-      render: {
-        fillStyle: "#060a19",
-      },
-    });
-  });
-  Composites.chain(bridge, 0.3, 0, -0.3, 0, {
-    stiffness: 1,
-    length: 0,
-    render: {
-      visible: true,
-    },
+  var rope = Composites.stack(
+    window.innerWidth / 2,
+    window.innerHeight / 3,
+    5,
+    1,
+    10,
+    10,
+    function (x, y) {
+      return Bodies.rectangle(x, y, 50, 20, {
+        collisionFilter: { group: group },
+        render: { fillStyle: "#121212" },
+      });
+    }
+  );
+  Composites.chain(rope, 0.5, 0, -0.5, 0, {
+    stiffness: 0.8,
+    length: 2,
+    render: { type: "line" },
   });
   const p1 = Constraint.create({
-    pointA: { x: 140, y: 300 },
-    bodyB: bridge.bodies[0],
+    bodyB: rope.bodies[0],
     pointB: { x: -25, y: 0 },
-    length: 2,
-    stiffness: 0.9,
-  });
-  const p2 = Constraint.create({
-    pointA: { x: 660, y: 300 },
-    bodyB: bridge.bodies[bridge.bodies.length - 1],
-    pointB: { x: 25, y: 0 },
-    length: 2,
-    stiffness: 0.9,
+    pointA: { x: rope.bodies[0].position.x, y: rope.bodies[0].position.y },
+    stiffness: 0.5,
   });
 
-  objects.push(ground, leftWall, rightWall, bridge, p1, p2);
+  objects.push(ground, leftWall, rightWall, rope, p1);
 
   const canvas = document.querySelector("canvas.webgl");
 
