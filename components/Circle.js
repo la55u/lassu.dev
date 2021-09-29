@@ -3,8 +3,8 @@ import { world } from "../utils/init";
 import { normalize } from "../utils/helpers";
 
 var options = {
-  friction: 0.3,
-  restitution: 0.9,
+  friction: 0.1,
+  restitution: 1,
   render: {
     fillStyle: "#121212",
   },

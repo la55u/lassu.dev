@@ -4,6 +4,8 @@ import { normalize } from "../utils/helpers";
 
 const options = {
   isStatic: true,
+  friction: 0,
+  restitution: 1,
   render: {
     fillStyle: "#121212",
   },
@@ -16,10 +18,5 @@ export class Boundary {
     World.add(world, this.body);
 
     console.log("new boundary:", this.body);
-  }
-
-  draw() {
-    const worldCoord = normalize(this.body.position.x, this.body.position.y);
-    this.mesh.position.set(0, 0.5, 0);
   }
 }
