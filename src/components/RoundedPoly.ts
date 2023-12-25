@@ -1,13 +1,13 @@
 import { Bodies, Common, World } from "matter-js";
-import { world } from "~utils/usePhysics";
-import { colorPresets } from "~utils/constants";
+import { world } from "src/utils/usePhysics";
+import { colorPresets } from "src/utils/constants";
 
 export class RoundedPoly {
   private body: Matter.Body;
 
   constructor(x: number, y: number, sides: number, size: number, radius: number) {
     const polyBase = Bodies.polygon(x, y, sides, size, {
-      friction: 0.1,
+      friction: 0.2,
       restitution: 0.6,
       render: {
         fillStyle: Common.choose(colorPresets),
@@ -16,6 +16,7 @@ export class RoundedPoly {
         radius: size / 4,
         qualityMin: 3,
       },
+      density: Common.random(0.001, 1),
       angle: Math.random() * Math.PI,
       // angularVelocity: 2,
       // velocity: {

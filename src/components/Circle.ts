@@ -1,6 +1,6 @@
 import { Bodies, Common, Composite, World } from "matter-js";
 import { world } from "../utils/usePhysics";
-import { colorPresets } from "~utils/constants";
+import { colorPresets } from "src/utils/constants";
 
 export class Circle {
   private body: Matter.Body;
@@ -8,7 +8,7 @@ export class Circle {
   constructor(x: number, y: number, r: number) {
     this.body = Bodies.circle(x, y, r, {
       friction: 0.1,
-      restitution: 0.7,
+      restitution: 0.3,
       render: {
         fillStyle: Common.choose(colorPresets),
       },

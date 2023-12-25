@@ -2,11 +2,11 @@ import { Engine, Mouse, MouseConstraint, Render, Runner, World } from "matter-js
 import { useEffect, useRef } from "react";
 import { Boundary } from "~components/Boundary";
 import { Circle } from "~components/Circle";
+import { NewtonsCradle } from "~components/NewtonsCradle";
 import { RoundedPoly } from "~components/RoundedPoly";
 import { getRandomInt } from "~utils/helpers";
 
 export var engine: Matter.Engine, world: Matter.World, renderer: Matter.Render;
-const objects = [];
 
 export function usePhysics() {
   const isDone = useRef(false);
@@ -19,28 +19,33 @@ export function usePhysics() {
   const init = () => {
     engine = Engine.create();
     world = engine.world;
-    const wallThickness = 50;
+    const WALL_THICHNESS = 50;
     const ground = new Boundary(
       window.innerWidth / 2,
-      window.innerHeight + wallThickness / 2,
+      window.innerHeight + WALL_THICHNESS / 2,
       window.innerWidth,
-      wallThickness
+      WALL_THICHNESS
     );
 
     const leftWall = new Boundary(
-      0 - wallThickness / 2,
+      0 - WALL_THICHNESS / 2,
       window.innerHeight / 2,
-      wallThickness,
+      WALL_THICHNESS,
       window.innerHeight
     );
     const rightWall = new Boundary(
-      window.innerWidth + wallThickness / 2,
+      window.innerWidth + WALL_THICHNESS / 2,
       window.innerHeight / 2,
-      wallThickness,
+      WALL_THICHNESS,
       window.innerHeight
     );
 
-    objects.push(ground, leftWall, rightWall);
+    ground.addToWorld();
+    leftWall.addToWorld();
+    rightWall.addToWorld();
+
+    // const newtonsCradle = new NewtonsCradle(200, 100, 5, 30, 200);
+    // newtonsCradle.addToWorld();
 
     const canvas = document.querySelector("canvas");
 
@@ -56,7 +61,7 @@ export function usePhysics() {
         },
       });
 
-    World.add(world, [...objects, mouseConstraint]);
+    World.add(world, [mouseConstraint]);
 
     renderer = Render.create({
       canvas: canvas,

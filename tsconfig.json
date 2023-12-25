@@ -14,8 +14,8 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "~utils/*": ["utils/*"],
-      "~components/*": ["components/*"]
+      "~utils/*": ["src/utils/*"],
+      "~components/*": ["src/components/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
