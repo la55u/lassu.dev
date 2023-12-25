@@ -1,21 +1,21 @@
+:root {
+  --gradient-green: linear-gradient(90deg, #34f7be 0, #61fd5a);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
 html,
 body {
-  padding: 0;
-  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
 body {
-  font-family: "JetBrains Mono", monospace;
-  background-color: black;
-  color: gainsboro;
-  background: linear-gradient(90deg, black 34px, transparent 1%) center,
-    linear-gradient(black 34px, transparent 1%) center, rgb(0, 206, 209, 0.5);
-  background-size: 35px 35px;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
+  font-family: Quicksand;
 }
 
 * {
