@@ -12,7 +12,6 @@ export default function Home() {
     <>
       <Head>
         <title>Andras Lassu&apos;s personal website</title>
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Content />
@@ -35,6 +34,7 @@ const words = [
   "Typescript lover",
   "Linux advocate",
   "React developer",
+  "React Native developer",
   "team player",
   "Rust learner",
   "wannabe 3D developer",
