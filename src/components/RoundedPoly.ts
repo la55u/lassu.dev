@@ -19,12 +19,6 @@ export class RoundedPoly {
       density: 1,
       slop: 0.1,
       angle: Math.random() * Math.PI,
-
-      // angularVelocity: 2,
-      // velocity: {
-      //   x: Common.random(-10, 10),
-      //   y: Common.random(-10, 10),
-      // },
     });
 
     this.body = polyBase;

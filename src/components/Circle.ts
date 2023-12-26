@@ -1,4 +1,4 @@
-import { Bodies, Common, Composite, World } from "matter-js";
+import { Bodies, Common, World } from "matter-js";
 import { world } from "../utils/usePhysics";
 import { colorPresets } from "src/utils/constants";
 

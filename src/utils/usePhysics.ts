@@ -1,6 +1,7 @@
 import {
   Bodies,
   Body,
+  Common,
   Engine,
   Mouse,
   MouseConstraint,
@@ -14,6 +15,7 @@ import { Circle } from "~components/Circle";
 import { RoundedPoly } from "~components/RoundedPoly";
 import { getRandomInt } from "~utils/helpers";
 import { colorPresets } from "./constants";
+import { Cross } from "~components/Cross";
 
 export var engine: Matter.Engine, world: Matter.World, renderer: Matter.Render;
 
@@ -153,18 +155,34 @@ export function usePhysics() {
     }
 
     function onWindowClick(e: MouseEvent) {
-      const obj =
-        Math.random() > 0.5
-          ? new Circle(e.clientX, e.clientY, getRandomInt(30, 120))
-          : new RoundedPoly(
-              e.clientX,
-              e.clientY,
-              getRandomInt(3, 6),
-              getRandomInt(30, 150),
-              10
-            );
+      const shape = Common.choose(["circle", "poly", "cross"]);
 
-      obj.addToWorld();
+      switch (shape) {
+        case "circle": {
+          const obj = new Circle(e.clientX, e.clientY, getRandomInt(30, 120));
+          obj.addToWorld();
+          break;
+        }
+        case "poly": {
+          const obj = new RoundedPoly(
+            e.clientX,
+            e.clientY,
+            getRandomInt(3, 6),
+            getRandomInt(30, 150),
+            10
+          );
+          obj.addToWorld();
+          break;
+        }
+        case "cross": {
+          const size = getRandomInt(40, 110);
+          const obj = new Cross(e.clientX, e.clientY, size);
+          obj.addToWorld();
+          break;
+        }
+        default:
+          console.warn("Shape creation not implemented for:", shape);
+      }
     }
 
     window.addEventListener("resize", onWindowResize);
