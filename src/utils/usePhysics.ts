@@ -86,7 +86,7 @@ export function usePhysics() {
         },
         chamfer: {
           radius: HEXAGON_SIZE / 4,
-          qualityMin: 3,
+          qualityMin: 5,
         },
         inertia: Infinity,
 
@@ -110,7 +110,7 @@ export function usePhysics() {
         },
         chamfer: {
           radius: TRIANGLE_SIZE / 4,
-          qualityMin: 3,
+          quality: 12,
         },
         inertia: Infinity,
         angle: 0.8,
