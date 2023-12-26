@@ -1,10 +1,19 @@
-import { Engine, Mouse, MouseConstraint, Render, Runner, World } from "matter-js";
+import {
+  Bodies,
+  Body,
+  Engine,
+  Mouse,
+  MouseConstraint,
+  Render,
+  Runner,
+  World,
+} from "matter-js";
 import { useEffect, useRef } from "react";
 import { Boundary } from "~components/Boundary";
 import { Circle } from "~components/Circle";
-import { NewtonsCradle } from "~components/NewtonsCradle";
 import { RoundedPoly } from "~components/RoundedPoly";
 import { getRandomInt } from "~utils/helpers";
+import { colorPresets } from "./constants";
 
 export var engine: Matter.Engine, world: Matter.World, renderer: Matter.Render;
 
@@ -17,7 +26,11 @@ export function usePhysics() {
   }, []);
 
   const init = () => {
-    engine = Engine.create();
+    engine = Engine.create({
+      enableSleeping: true,
+      positionIterations: 10,
+      constraintIterations: 10,
+    });
     world = engine.world;
     const WALL_THICHNESS = 50;
     const ground = new Boundary(
@@ -44,9 +57,6 @@ export function usePhysics() {
     leftWall.addToWorld();
     rightWall.addToWorld();
 
-    // const newtonsCradle = new NewtonsCradle(200, 100, 5, 30, 200);
-    // newtonsCradle.addToWorld();
-
     const canvas = document.querySelector("canvas");
 
     // add mouse control
@@ -61,14 +71,68 @@ export function usePhysics() {
         },
       });
 
-    World.add(world, [mouseConstraint]);
+    const HEXAGON_SIZE = Math.max(150, canvas.clientWidth / 7);
+    const hexagon = Bodies.polygon(
+      canvas.clientWidth - HEXAGON_SIZE,
+      HEXAGON_SIZE,
+      6,
+      HEXAGON_SIZE,
+      {
+        isStatic: true,
+        friction: 0.2,
+        restitution: 0.1,
+        render: {
+          fillStyle: colorPresets[0],
+        },
+        chamfer: {
+          radius: HEXAGON_SIZE / 4,
+          qualityMin: 3,
+        },
+        inertia: Infinity,
+
+        density: 1,
+        slop: 0.1,
+      }
+    );
+
+    const TRIANGLE_SIZE = Math.max(110, canvas.clientWidth / 8);
+    const triangle = Bodies.polygon(
+      TRIANGLE_SIZE,
+      canvas.clientHeight - TRIANGLE_SIZE,
+      3,
+      TRIANGLE_SIZE,
+      {
+        isStatic: true,
+        friction: 0.2,
+        restitution: 0.1,
+        render: {
+          fillStyle: colorPresets[3],
+        },
+        chamfer: {
+          radius: TRIANGLE_SIZE / 4,
+          qualityMin: 3,
+        },
+        inertia: Infinity,
+        angle: 0.8,
+      }
+    );
+
+    // rotate objects continuously
+    function updateRotation() {
+      Body.rotate(hexagon, 0.005);
+      //Body.rotate(triangle, -0.004);
+      requestAnimationFrame(updateRotation);
+    }
+    window.requestAnimationFrame(updateRotation);
+
+    World.add(world, [hexagon, triangle, mouseConstraint]);
 
     renderer = Render.create({
       canvas: canvas,
       engine: engine,
       options: {
         wireframes: false,
-        // wireframeBackground: true,
+        showSleeping: process.env.NODE_ENV === "development",
         height: canvas.clientHeight,
         width: canvas.clientWidth,
         showAngleIndicator: false,

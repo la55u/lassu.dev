@@ -9,6 +9,7 @@ export class Circle {
     this.body = Bodies.circle(x, y, r, {
       friction: 0.1,
       restitution: 0.3,
+      density: 1,
       render: {
         fillStyle: Common.choose(colorPresets),
       },

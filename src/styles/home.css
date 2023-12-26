@@ -18,13 +18,13 @@ canvas {
   justify-content: center;
   align-items: center;
   padding: 2rem;
+  pointer-events: none;
 }
 
 .content {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  pointer-events: none;
 
   & h1 {
     font-size: clamp(2rem, 0.8583rem + 3.0667vw, 4rem);

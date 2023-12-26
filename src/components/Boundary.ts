@@ -9,7 +9,7 @@ export class Boundary {
       isStatic: true,
       friction: 0.9,
       frictionStatic: 5,
-      restitution: 1,
+      restitution: 0,
       render: {
         fillStyle: "#121212",
       },

@@ -16,8 +16,10 @@ export class RoundedPoly {
         radius: size / 4,
         qualityMin: 3,
       },
-      density: Common.random(0.001, 1),
+      density: 1,
+      slop: 0.1,
       angle: Math.random() * Math.PI,
+
       // angularVelocity: 2,
       // velocity: {
       //   x: Common.random(-10, 10),
