@@ -35,7 +35,6 @@ canvas {
   & p {
     color: gray;
     font-style: italic;
-    text-wrap: balance;
     font-size: clamp(1.2rem, 0.1583rem + 3.0667vw, 1.4rem);
     user-select: none;
   }

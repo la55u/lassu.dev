@@ -159,7 +159,7 @@ export function usePhysics() {
 
       switch (shape) {
         case "circle": {
-          const obj = new Circle(e.clientX, e.clientY, getRandomInt(30, 120));
+          const obj = new Circle(e.clientX, e.clientY, getRandomInt(20, 100));
           obj.addToWorld();
           break;
         }
@@ -168,14 +168,14 @@ export function usePhysics() {
             e.clientX,
             e.clientY,
             getRandomInt(3, 6),
-            getRandomInt(30, 150),
+            getRandomInt(20, 110),
             10
           );
           obj.addToWorld();
           break;
         }
         case "cross": {
-          const size = getRandomInt(40, 110);
+          const size = getRandomInt(20, 100);
           const obj = new Cross(e.clientX, e.clientY, size);
           obj.addToWorld();
           break;
