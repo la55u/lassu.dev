@@ -8,7 +8,7 @@ export class Cross {
   constructor(x: number, y: number, size: number) {
     const radius = size / 10;
     const width = size;
-    const height = size / 5;
+    const height = size / 4;
 
     const options: Matter.IChamferableBodyDefinition = {
       density: 1,
