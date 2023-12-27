@@ -97,7 +97,7 @@ export function usePhysics() {
       }
     );
 
-    const TRIANGLE_SIZE = Math.max(110, canvas.clientWidth / 8);
+    const TRIANGLE_SIZE = Math.max(110, canvas.clientWidth / 9);
     const triangle = Bodies.polygon(
       TRIANGLE_SIZE,
       canvas.clientHeight - TRIANGLE_SIZE,
@@ -122,7 +122,7 @@ export function usePhysics() {
     // rotate objects continuously
     function updateRotation() {
       Body.rotate(hexagon, 0.005);
-      //Body.rotate(triangle, -0.004);
+      Body.rotate(triangle, -0.0015);
       requestAnimationFrame(updateRotation);
     }
     window.requestAnimationFrame(updateRotation);
