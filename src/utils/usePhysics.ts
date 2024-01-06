@@ -186,6 +186,6 @@ export function usePhysics() {
     }
 
     window.addEventListener("resize", onWindowResize);
-    window.addEventListener("click", onWindowClick);
+    canvas.addEventListener("click", onWindowClick);
   };
 }

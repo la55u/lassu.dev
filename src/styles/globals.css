@@ -1,5 +1,5 @@
 :root {
-  --gradient-green: linear-gradient(90deg, #34f7be 0, #61fd5a);
+  --media-sm: 300px;
 }
 
 * {
@@ -16,5 +16,5 @@ body {
 }
 
 body {
-  font-family: Quicksand;
+  font-family: "Comfortaa";
 }

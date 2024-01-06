@@ -27,7 +27,7 @@ canvas {
   gap: 1rem;
 
   & h1 {
-    font-size: clamp(2rem, 0.8583rem + 3.0667vw, 4rem);
+    font-size: clamp(2.5rem, 1rem + 3.0667vw, 5rem);
     color: #f1f1f1;
     user-select: none;
   }
@@ -47,6 +47,12 @@ canvas {
     border-radius: 6px;
     font-weight: 500;
     margin-left: 5px;
+    --media-sm: 300px;
+
+    @media (max-width: 400px) {
+      display: block;
+      width: max-content;
+    }
   }
 
   & button {

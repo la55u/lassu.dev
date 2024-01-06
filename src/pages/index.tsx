@@ -38,11 +38,12 @@ const words = [
   "team player",
   "Rust learner",
   "wannabe 3D developer",
+  "coding mentor",
   "VSCode user",
   "Android user",
   "MTB rider",
   "cat owner",
-  "developer with a designer mind",
+  "coder",
 ];
 
 const Content = () => {
@@ -64,8 +65,11 @@ const Content = () => {
       <main className="content">
         <h1>Andras Lassu</h1>
         <p>
-          Hi, I&apos;m Andras, a <span className="highlight">{words[currentIndex]}</span>
-          <br />
+          Hi, I&apos;m Andras, a{" "}
+          <span className="highlight">
+            {words[currentIndex]}
+            <br />
+          </span>
           from Budapest, Hungary and this is my personal website.
         </p>
         <button>DO NOT CLICK ME</button>
