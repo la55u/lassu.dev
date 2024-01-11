@@ -53,6 +53,7 @@ const Content = () => {
   // subscribe to the `tick` event to change words
   useEffect(() => {
     if (isAttached.current) return;
+
     document.addEventListener("tick", () => {
       console.log("tick");
       setCurrentIndex((i) => (i + 1) % words.length);

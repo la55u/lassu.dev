@@ -52,6 +52,9 @@ canvas {
     @media (max-width: 400px) {
       display: block;
       width: max-content;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      margin: 10px 0;
     }
   }
 
