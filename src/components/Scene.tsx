@@ -1,8 +1,17 @@
 import { Physics, useSphere } from "@react-three/cannon";
-import { Environment, Text, useTexture } from "@react-three/drei";
+import {
+  Environment,
+  Scroll,
+  ScrollControls,
+  Text,
+  useScroll,
+  useTexture,
+} from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { EffectComposer, N8AO, SMAA, TiltShift2 } from "@react-three/postprocessing";
+import { group } from "console";
 import { easing } from "maath";
+import { useRef } from "react";
 import * as THREE from "three";
 
 export const Scene = () => {
@@ -24,19 +33,7 @@ export const Scene = () => {
         shadow-mapSize={[512, 512]}
       />
 
-      <Text
-        font={"/MajorMonoDisplay-Regular.ttf"}
-        fontSize={2.6}
-        letterSpacing={-0.025}
-        color="black"
-      >
-        Andras Lassu
-      </Text>
-
-      <Physics gravity={[0, 2, 0]} iterations={10}>
-        <Pointer />
-        <Clump />
-      </Physics>
+      <TopScene />
 
       <Rig />
 
@@ -54,6 +51,42 @@ export const Scene = () => {
         <TiltShift2 blur={0.05} />
       </EffectComposer>
     </Canvas>
+  );
+};
+
+const TopScene = () => {
+  const scrollData = useScroll();
+  const groupRef = useRef<THREE.Group>();
+
+  //   useFrame(() => {
+  //     // console.log(scrollData);
+  //     const scale = scrollData.range(0, 1 / 3);
+  //     console.log(scale);
+  //     groupRef.current.position.set(
+  //       groupRef.current.position.x + scale,
+  //       groupRef.current.position.y,
+  //       groupRef.current.position.z
+  //     );
+  //   });
+
+  return (
+    <group>
+      <Text
+        ref={groupRef}
+        font={"/MajorMonoDisplay-Regular.ttf"}
+        fontSize={2.6}
+        letterSpacing={-0.025}
+        color="black"
+      >
+        ANDRAS LASSU
+      </Text>
+
+      <Physics gravity={[0, 2, 0]} iterations={10}>
+        <Pointer />
+
+        <Clump />
+      </Physics>
+    </group>
   );
 };
 
@@ -125,13 +158,13 @@ function Pointer() {
     args: [3],
     position: [0, 0, 0],
   }));
-  useFrame((state) =>
+  useFrame((state) => {
     api.position.set(
       (state.pointer.x * viewport.width) / 2,
       (state.pointer.y * viewport.height) / 2,
       0
-    )
-  );
+    );
+  });
   return (
     // @ts-expect-error
     <mesh ref={ref}>
