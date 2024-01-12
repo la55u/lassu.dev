@@ -168,7 +168,7 @@ function Pointer() {
     // @ts-expect-error
     <mesh ref={ref}>
       <sphereGeometry args={[0.2, 32, 32]} />
-      <meshBasicMaterial fog={false} depthTest={false} color="greenyellow" />
+      <meshBasicMaterial fog={false} depthTest={false} color="black" />
     </mesh>
   );
 }
