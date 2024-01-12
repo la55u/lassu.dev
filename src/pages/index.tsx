@@ -49,7 +49,7 @@ export default function HomePage() {
         <EffectComposer disableNormalPass multisampling={0}>
           <N8AO
             halfRes
-            color="aquamarine"
+            color="greenyellow"
             aoRadius={2}
             intensity={1}
             aoSamples={6}
@@ -126,6 +126,7 @@ function Clump({ mat = new THREE.Matrix4(), vec = new THREE.Vector3(), ...props 
   useFrame((state) => {
     for (let i = 0; i < 40; i++) {
       // Get current whereabouts of the instanced sphere
+      // @ts-expect-error
       ref.current.getMatrixAt(i, mat);
       // Normalize the position and multiply by a negative force.
       // This is enough to drive it towards the center-point.
@@ -139,6 +140,7 @@ function Clump({ mat = new THREE.Matrix4(), vec = new THREE.Vector3(), ...props 
   });
   return (
     <instancedMesh
+      // @ts-expect-error
       ref={ref}
       castShadow
       receiveShadow
@@ -150,16 +152,22 @@ function Clump({ mat = new THREE.Matrix4(), vec = new THREE.Vector3(), ...props 
 
 function Pointer() {
   const viewport = useThree((state) => state.viewport);
-  const [, api] = useSphere(() => ({
+  const [ref, api] = useSphere(() => ({
     type: "Kinematic",
     args: [3],
     position: [0, 0, 0],
   }));
-  return useFrame((state) =>
+  useFrame((state) =>
     api.position.set(
       (state.pointer.x * viewport.width) / 2,
       (state.pointer.y * viewport.height) / 2,
       0
     )
+  );
+  return (
+    <mesh ref={ref}>
+      <sphereGeometry args={[0.2, 32, 32]} />
+      <meshBasicMaterial fog={false} depthTest={false} color="greenyellow" />
+    </mesh>
   );
 }
