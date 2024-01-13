@@ -1,9 +1,11 @@
 import { Physics, useSphere } from "@react-three/cannon";
 import {
   Environment,
+  Html,
   Scroll,
   ScrollControls,
   Text,
+  useProgress,
   useScroll,
   useTexture,
 } from "@react-three/drei";
@@ -11,48 +13,86 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { EffectComposer, N8AO, SMAA, TiltShift2 } from "@react-three/postprocessing";
 import { group } from "console";
 import { easing } from "maath";
-import { useRef } from "react";
+import { Suspense, useRef } from "react";
 import * as THREE from "three";
 
 export const Scene = () => {
   return (
-    <Canvas
-      shadows
-      gl={{ antialias: false }}
-      dpr={[1, 1.5]}
-      camera={{ position: [0, 0, 20], fov: 35, near: 1, far: 40 }}
-    >
-      <ambientLight intensity={0.5} />
-      <color attach="background" args={["#dfdfdf"]} />
-      <spotLight
-        intensity={1}
-        angle={0.2}
-        penumbra={1}
-        position={[30, 30, 30]}
-        castShadow
-        shadow-mapSize={[512, 512]}
-      />
+    <>
+      <nav>
+        <a className="logo" href="#">
+          {"/home/la # "}
+          <span className="blink">_</span>
+        </a>
 
-      <TopScene />
+        <a id="home-reel-cta" href="#about">
+          <span id="home-reel-cta-dot"></span>
+          <span id="home-reel-cta-text">About</span>
+          <span id="home-reel-cta-arrow">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="none"
+              viewBox="0 0 16 16"
+            >
+              <path
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M2.343 8h11.314m0 0L8.673 3.016M13.657 8l-4.984 4.984"
+              ></path>
+            </svg>
+          </span>
+        </a>
+      </nav>
 
-      <Rig />
+      <Canvas
+        shadows
+        gl={{ antialias: false }}
+        dpr={[1, 1.5]}
+        camera={{ position: [0, 0, 20], fov: 35, near: 1, far: 40 }}
+      >
+        <color attach="background" args={["#dfdfdf"]} />
+        <Suspense fallback={<Loader />}>
+          <ambientLight intensity={0.5} />
+          <spotLight
+            intensity={1}
+            angle={0.2}
+            penumbra={1}
+            position={[30, 30, 30]}
+            castShadow
+            shadow-mapSize={[512, 512]}
+          />
 
-      <Environment files="/adamsbridge.hdr" />
-      <EffectComposer disableNormalPass multisampling={0}>
-        <N8AO
-          halfRes
-          color="greenyellow"
-          aoRadius={2}
-          intensity={1}
-          aoSamples={6}
-          denoiseSamples={4}
-        />
-        <SMAA />
-        <TiltShift2 blur={0.05} />
-      </EffectComposer>
-    </Canvas>
+          <TopScene />
+
+          <Rig />
+
+          <Environment files="/adamsbridge.hdr" />
+          <EffectComposer disableNormalPass multisampling={0}>
+            <N8AO
+              halfRes
+              color="greenyellow"
+              aoRadius={2}
+              intensity={1}
+              aoSamples={6}
+              denoiseSamples={4}
+            />
+            <SMAA />
+            <TiltShift2 blur={0.06} />
+          </EffectComposer>
+        </Suspense>
+      </Canvas>
+    </>
   );
 };
+
+function Loader() {
+  const { active, progress, errors, item, loaded, total } = useProgress();
+  return <Html center>{progress} % loaded</Html>;
+}
 
 const TopScene = () => {
   const scrollData = useScroll();
@@ -69,16 +109,20 @@ const TopScene = () => {
   //     );
   //   });
 
+  const isSmallScreen = window.matchMedia("(max-width: 1000px)").matches;
+  const text = isSmallScreen ? "ANDRAS\nLASSU" : "ANDRAS LASSU";
+  const fontSize = isSmallScreen ? 2 : 2.6;
+
   return (
     <group>
       <Text
         ref={groupRef}
-        font={"/MajorMonoDisplay-Regular.ttf"}
-        fontSize={2.6}
+        font={"/MajorMonoDisplay-Regular.woff"}
+        fontSize={fontSize}
         letterSpacing={-0.025}
         color="black"
       >
-        ANDRAS LASSU
+        {text}
       </Text>
 
       <Physics gravity={[0, 2, 0]} iterations={10}>
