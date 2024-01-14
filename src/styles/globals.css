@@ -61,6 +61,7 @@ nav {
   transition: background cubic-bezier(0.35, 0, 0, 1) 0.2s;
   will-change: transform;
   text-decoration: none;
+  user-select: none;
 
   & .nav-link-dot {
     display: inline-block;
