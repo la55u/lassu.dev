@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { Nav } from "~components/Nav";
 
 import { Scene } from "~components/Scene";
 
@@ -9,6 +10,7 @@ export default function HomePage() {
         <title>Andras Lassu&apos;s personal website</title>
       </Head>
 
+      <Nav />
       <Scene />
     </>
   );
