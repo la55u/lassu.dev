@@ -23,9 +23,9 @@ export const Nav = () => {
 const NavLink = ({ href, children }: { href: string; children: string }) => {
   return (
     <a className="nav-link" href={href}>
-      <span className="nav-link-dot"></span>
-      <span className="nav-link-text">{children}</span>
-      <span className="nav-link-arrow">
+      <span className="dot"></span>
+      <span className="text">{children}</span>
+      <span className="arrow">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"

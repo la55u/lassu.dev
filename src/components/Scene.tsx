@@ -129,7 +129,7 @@ const baubleMaterial = new THREE.MeshStandardMaterial({
 });
 
 const Clump = ({ mat = new THREE.Matrix4(), vec = new THREE.Vector3(), ...props }) => {
-  const BALL_COUNT = 20;
+  const BALL_COUNT = 10;
   const texture = useTexture("/cross.jpg");
   const [ref, api] = useSphere(() => ({
     args: [1],

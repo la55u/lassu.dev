@@ -6,10 +6,6 @@ import { Scene } from "~components/Scene";
 export default function HomePage() {
   return (
     <>
-      <Head>
-        <title>Andras Lassu&apos;s personal website</title>
-      </Head>
-
       <Nav />
       <Scene />
     </>
