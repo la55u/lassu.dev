@@ -129,6 +129,7 @@ const baubleMaterial = new THREE.MeshStandardMaterial({
 });
 
 const Clump = ({ mat = new THREE.Matrix4(), vec = new THREE.Vector3(), ...props }) => {
+  const BALL_COUNT = 20;
   const texture = useTexture("/cross.jpg");
   const [ref, api] = useSphere(() => ({
     args: [1],
@@ -138,7 +139,7 @@ const Clump = ({ mat = new THREE.Matrix4(), vec = new THREE.Vector3(), ...props 
     position: [rfs(20), rfs(20), rfs(20)],
   }));
   useFrame((state) => {
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < BALL_COUNT; i++) {
       // Get current whereabouts of the instanced sphere
       // @ts-expect-error
       ref.current.getMatrixAt(i, mat);
@@ -158,7 +159,7 @@ const Clump = ({ mat = new THREE.Matrix4(), vec = new THREE.Vector3(), ...props 
       ref={ref}
       castShadow
       receiveShadow
-      args={[sphereGeometry, baubleMaterial, 20]}
+      args={[sphereGeometry, baubleMaterial, BALL_COUNT]}
       material-map={texture}
     ></instancedMesh>
   );
