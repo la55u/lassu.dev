@@ -1,20 +1,23 @@
 import { Physics, useSphere } from "@react-three/cannon";
 import {
+  Box,
   Environment,
   Html,
+  MeshTransmissionMaterial,
   Scroll,
   ScrollControls,
   Text,
+  useGLTF,
   useProgress,
   useScroll,
   useTexture,
 } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { EffectComposer, N8AO, SMAA, TiltShift2 } from "@react-three/postprocessing";
-import { group } from "console";
 import { easing } from "maath";
 import { Suspense, useRef } from "react";
 import * as THREE from "three";
+import { useSceneStore } from "~utils/store";
 
 export const Scene = () => {
   return (
@@ -36,7 +39,11 @@ export const Scene = () => {
           shadow-mapSize={[512, 512]}
         />
 
-        <TopScene />
+        <ScrollControls pages={3} damping={0.5} distance={0.5}>
+          <Scroll>
+            <TopScene />
+          </Scroll>
+        </ScrollControls>
 
         <Rig />
 
@@ -59,13 +66,38 @@ export const Scene = () => {
 };
 
 function Loader() {
-  const { active, progress, errors, item, loaded, total } = useProgress();
-  return <Html center>{progress} % loaded</Html>;
+  const { active, progress } = useProgress();
+  return (
+    <Html center className="loader">
+      {Math.floor(progress)} %
+    </Html>
+  );
 }
 
 const TopScene = () => {
-  const scrollData = useScroll();
-  const groupRef = useRef<THREE.Group>();
+  const scroll = useScroll();
+
+  const setForce = useSceneStore((s) => s.setForce);
+  const resetForce = useSceneStore((s) => s.resetForce);
+  const setStrongGravity = useSceneStore((s) => s.setStrongGravity);
+  const resetGravity = useSceneStore((s) => s.resetGravity);
+  const boxRef = useRef<THREE.Mesh>();
+
+  const gravity = useSceneStore((s) => s.gravity);
+
+  useFrame(() => {
+    if (scroll.offset > 0.1) {
+      setForce(Math.random() * 10);
+      setStrongGravity();
+    } else {
+      resetForce();
+      resetGravity();
+    }
+  });
+
+  useFrame((state, delta) => {
+    boxRef.current.rotation.z += delta / 4;
+  });
 
   //   useFrame(() => {
   //     // console.log(scrollData);
@@ -78,28 +110,70 @@ const TopScene = () => {
   //     );
   //   });
 
+  return (
+    <>
+      <BigText />
+
+      <Box
+        ref={boxRef}
+        args={[5, 5, 5]}
+        rotation={[0.4, 0.1, 1.1]}
+        position={[0, -10, 0]}
+      >
+        <meshStandardMaterial />
+      </Box>
+      <Connector />
+
+      <Physics gravity={[0, gravity, 0]} iterations={10}>
+        <Pointer />
+        <Clump />
+      </Physics>
+    </>
+  );
+};
+
+const Connector = () => {
+  const ref = useRef<THREE.Mesh>();
+  const { nodes, materials } = useGLTF("/connector.glb");
+  useFrame((state, delta) => {
+    //easing.dampE(ref.current.rotation, [], 0.2, delta)
+    easing.damp(ref.current.rotation, "z", 0.1, delta);
+  });
+  return (
+    <mesh ref={ref} receiveShadow scale={12} geometry={nodes.connector.geometry}>
+      <meshStandardMaterial metalness={0.2} roughness={0} map={materials.base.map} />
+      <MeshTransmissionMaterial
+        clearcoat={1}
+        thickness={0.1}
+        anisotropicBlur={0.1}
+        chromaticAberration={0.1}
+        samples={8}
+        resolution={512}
+      />
+    </mesh>
+  );
+};
+
+const BigText = () => {
+  const scroll = useScroll();
   const isSmallScreen = window.matchMedia("(max-width: 1000px)").matches;
   const text = isSmallScreen ? "ANDRAS\nLASSU" : "ANDRAS LASSU";
   const fontSize = isSmallScreen ? 2 : 2.6;
-
+  const textRef = useRef<THREE.Group>();
+  // useFrame(() => {
+  //   console.log(scroll.offset);
+  //   textRef.current.position.setY(scroll.offset * 10);
+  // });
   return (
-    <group>
-      <Text
-        ref={groupRef}
-        font={"/MajorMonoDisplay-Regular.woff"}
-        fontSize={fontSize}
-        letterSpacing={-0.025}
-        color="black"
-      >
-        {text}
-      </Text>
-
-      <Physics gravity={[0, 2, 0]} iterations={10}>
-        <Pointer />
-
-        <Clump />
-      </Physics>
-    </group>
+    <Text
+      ref={textRef}
+      font={"/MajorMonoDisplay-Regular.woff"}
+      fontSize={fontSize}
+      letterSpacing={-0.025}
+      color="black"
+    >
+      {text}
+    </Text>
   );
 };
 
@@ -130,6 +204,7 @@ const baubleMaterial = new THREE.MeshStandardMaterial({
 
 const Clump = ({ mat = new THREE.Matrix4(), vec = new THREE.Vector3(), ...props }) => {
   const BALL_COUNT = 10;
+  const force = useSceneStore((s) => s.force);
   const texture = useTexture("/cross.jpg");
   const [ref, api] = useSphere(() => ({
     args: [1],
@@ -148,7 +223,7 @@ const Clump = ({ mat = new THREE.Matrix4(), vec = new THREE.Vector3(), ...props 
       api
         .at(i)
         .applyForce(
-          vec.setFromMatrixPosition(mat).normalize().multiplyScalar(-40).toArray(),
+          vec.setFromMatrixPosition(mat).normalize().multiplyScalar(force).toArray(),
           [0, 0, 0]
         );
     }
