@@ -173,10 +173,12 @@ nav {
   }
 
   & p::first-letter {
-    font-weight: 600;
+    /* font-weight: 600;
     font-size: 3em;
     float: left;
-    padding: 6px 3px;
+    padding: 6px 3px; */
+    initial-letter: 2;
+    padding-right: 10px;
   }
 }
 
