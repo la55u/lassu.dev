@@ -1,3 +1,5 @@
+import { ArrowRightIcon } from "@radix-ui/react-icons";
+
 export const Nav = () => {
   return (
     <nav>
@@ -23,23 +25,7 @@ const NavLink = ({ href, children }: { href: string; children: string }) => {
     <a className="nav-link" href={href}>
       <span className="dot"></span>
       <span className="text">{children}</span>
-      <span className="arrow">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="none"
-          viewBox="0 0 16 16"
-        >
-          <path
-            stroke="#fff"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M2.343 8h11.314m0 0L8.673 3.016M13.657 8l-4.984 4.984"
-          ></path>
-        </svg>
-      </span>
+      <ArrowRightIcon className="arrow" />
     </a>
   );
 };
