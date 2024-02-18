@@ -1,5 +1,9 @@
 :root {
-  --media-sm: 300px;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
   --color-black: black;
   --color-white: white;
   --font-size-nav: clamp(0.875rem, 1vw, 1.2rem);
@@ -172,13 +176,15 @@ nav {
     padding: 0 20px;
   }
 
-  & p::first-letter {
-    /* font-weight: 600;
+  @supports (initial-letter: 2) {
+    & p::first-letter {
+      /* font-weight: 600;
     font-size: 3em;
     float: left;
     padding: 6px 3px; */
-    initial-letter: 2;
-    padding-right: 10px;
+      initial-letter: 2;
+      padding-right: 10px;
+    }
   }
 }
 

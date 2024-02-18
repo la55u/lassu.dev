@@ -1,36 +1,22 @@
-import { Physics, usePlane, useSphere } from "@react-three/cannon";
+import { Physics, useSphere } from "@react-three/cannon";
 import {
-  Circle,
   Environment,
   Grid,
   Html,
-  Mask,
-  MeshTransmissionMaterial,
   RoundedBox,
   Scroll,
   ScrollControls,
   Text,
   Text3D,
-  useFBO,
-  useGLTF,
-  useMask,
   useProgress,
-  useScroll,
   useTexture,
 } from "@react-three/drei";
-import {
-  Canvas,
-  Object3DNode,
-  createPortal,
-  extend,
-  useFrame,
-  useThree,
-} from "@react-three/fiber";
+import { Canvas, Object3DNode, extend, useFrame, useThree } from "@react-three/fiber";
 import { EffectComposer, N8AO, SMAA, TiltShift2 } from "@react-three/postprocessing";
 import { easing, geometry } from "maath";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import * as THREE from "three";
-import { useSceneStore } from "~utils/store";
+import { useSceneStore } from "../utils/store";
 
 extend({ RoundedPlaneGeometry: geometry.RoundedPlaneGeometry });
 
@@ -176,7 +162,7 @@ export const Scene = () => {
 };
 
 function Loader() {
-  const { active, progress } = useProgress();
+  const { progress } = useProgress();
   return (
     <Html center className="loader">
       {Math.floor(progress)} %
@@ -185,129 +171,88 @@ function Loader() {
 }
 
 const TopScene = () => {
-  const scroll = useScroll();
-
-  const setForce = useSceneStore((s) => s.setForce);
-  const resetForce = useSceneStore((s) => s.resetForce);
-  const setStrongGravity = useSceneStore((s) => s.setStrongGravity);
-  const resetGravity = useSceneStore((s) => s.resetGravity);
-
-  useFrame(() => {
-    // if (scroll.offset > 0.1) {
-    //   setForce(Math.random() * 10);
-    //   setStrongGravity();
-    // } else {
-    //   resetForce();
-    //   resetGravity();
-    // }
-  });
-
-  //   useFrame(() => {
-  //     // console.log(scrollData);
-  //     const scale = scrollData.range(0, 1 / 3);
-  //     console.log(scale);
-  //     groupRef.current.position.set(
-  //       groupRef.current.position.x + scale,
-  //       groupRef.current.position.y,
-  //       groupRef.current.position.z
-  //     );
-  //   });
-
   return (
     <>
       <BigText />
-
       <Pointer />
       <Clump />
     </>
   );
 };
 
-function Lens({ children, damping = 0.15, ...props }) {
-  const ref = useRef<THREE.Mesh>();
-  const { nodes } = useGLTF("/lens.glb");
-  const buffer = useFBO();
-  const viewport = useThree((state) => state.viewport);
-  const [scene] = useState(() => new THREE.Scene());
-  useFrame((state, delta) => {
-    // Tie lens to the pointer
-    // getCurrentViewport gives us the width & height that would fill the screen in threejs units
-    // By giving it a target coordinate we can offset these bounds, for instance width/height for a plane that
-    // sits 15 units from 0/0/0 towards the camera (which is where the lens is)
-    const viewport = state.viewport.getCurrentViewport(state.camera, [0, 0, 15]);
-    easing.damp3(
-      ref.current.position,
-      [
-        (state.pointer.x * viewport.width) / 2,
-        (state.pointer.y * viewport.height) / 2,
-        15,
-      ],
-      damping,
-      delta
-    );
-    // This is entirely optional but spares us one extra render of the scene
-    // The createPortal below will mount the children of <Lens> into the new THREE.Scene above
-    // The following code will render that scene into a buffer, whose texture will then be fed into
-    // a plane spanning the full screen and the lens transmission material
-    state.gl.setRenderTarget(buffer);
-    state.gl.setClearColor("#d8d7d7");
-    state.gl.render(scene, state.camera);
-    state.gl.setRenderTarget(null);
-  });
-  return (
-    <>
-      {createPortal(children, scene)}
-      <mesh scale={[viewport.width, viewport.height, 1]}>
-        <planeGeometry />
-        <meshBasicMaterial map={buffer.texture} />
-      </mesh>
-      <mesh
-        scale={0.25}
-        ref={ref}
-        rotation-x={Math.PI / 2}
-        // @ts-expect-error
-        geometry={nodes.Cylinder.geometry}
-        {...props}
-      >
-        <MeshTransmissionMaterial
-          buffer={buffer.texture}
-          ior={1.2}
-          thickness={1.5}
-          anisotropy={0.1}
-          chromaticAberration={0.04}
-        />
-      </mesh>
-    </>
-  );
-}
+// function Lens({ children, damping = 0.15, ...props }) {
+//   const ref = useRef<THREE.Mesh>();
+//   const { nodes } = useGLTF("/lens.glb");
+//   const buffer = useFBO();
+//   const viewport = useThree((state) => state.viewport);
+//   const [scene] = useState(() => new THREE.Scene());
+//   useFrame((state, delta) => {
+//     // Tie lens to the pointer
+//     // getCurrentViewport gives us the width & height that would fill the screen in threejs units
+//     // By giving it a target coordinate we can offset these bounds, for instance width/height for a plane that
+//     // sits 15 units from 0/0/0 towards the camera (which is where the lens is)
+//     const viewport = state.viewport.getCurrentViewport(state.camera, [0, 0, 15]);
+//     easing.damp3(
+//       ref.current.position,
+//       [
+//         (state.pointer.x * viewport.width) / 2,
+//         (state.pointer.y * viewport.height) / 2,
+//         15,
+//       ],
+//       damping,
+//       delta
+//     );
+//     // This is entirely optional but spares us one extra render of the scene
+//     // The createPortal below will mount the children of <Lens> into the new THREE.Scene above
+//     // The following code will render that scene into a buffer, whose texture will then be fed into
+//     // a plane spanning the full screen and the lens transmission material
+//     state.gl.setRenderTarget(buffer);
+//     state.gl.setClearColor("#d8d7d7");
+//     state.gl.render(scene, state.camera);
+//     state.gl.setRenderTarget(null);
+//   });
+//   return (
+//     <>
+//       {createPortal(children, scene)}
+//       <mesh scale={[viewport.width, viewport.height, 1]}>
+//         <planeGeometry />
+//         <meshBasicMaterial map={buffer.texture} />
+//       </mesh>
+//       <mesh
+//         scale={0.25}
+//         ref={ref}
+//         rotation-x={Math.PI / 2}
+//         // @ts-expect-error
+//         geometry={nodes.Cylinder.geometry}
+//         {...props}
+//       >
+//         <MeshTransmissionMaterial
+//           buffer={buffer.texture}
+//           ior={1.2}
+//           thickness={1.5}
+//           anisotropy={0.1}
+//           chromaticAberration={0.04}
+//         />
+//       </mesh>
+//     </>
+//   );
+// }
 
 const Boxes = () => {
   const state = useThree();
-  const box1Ref = useRef<THREE.Mesh>();
-  const box2Ref = useRef<THREE.Mesh>();
-  const box3Ref = useRef<THREE.Mesh>();
-  const { width, height } = state.viewport;
+  const box1Ref = useRef<THREE.Mesh>(null);
+  const box2Ref = useRef<THREE.Mesh>(null);
+  const box3Ref = useRef<THREE.Mesh>(null);
+  const { height } = state.viewport;
 
   useFrame((state, delta) => {
-    box1Ref.current.rotation.z += delta / 5;
-    box2Ref.current.rotation.z += delta / 7;
-    box3Ref.current.rotation.z -= delta / 6;
+    box1Ref.current!.rotation.z += delta / 5;
+    box2Ref.current!.rotation.z += delta / 7;
+    box3Ref.current!.rotation.z -= delta / 6;
   });
 
   return (
     <group position={[0, -height, 0.5]}>
-      {/* <Text
-        font="/GeistMono-Regular.woff"
-        maxWidth={Math.min(width - 2, 15)}
-        anchorX="center"
-        color="black"
-        letterSpacing={-0.05}
-        lineHeight={1.1}
-      >
-        Hi. I&apos;m Andras, a software developer from Budapest, Hungary. I work primarily
-        on the frontend.
-      </Text> */}
-
       <instancedMesh>
         <RoundedBox
           radius={0.4}
@@ -344,122 +289,122 @@ const Boxes = () => {
   );
 };
 
-const Text2 = () => {
-  const scroll = useScroll();
-  const { viewport, gl, camera } = useThree();
-  const { width, height } = viewport.getCurrentViewport(camera, [0, 0, 10]);
-  const connectorRef = useRef<THREE.Mesh>();
-  const { nodes, materials } = useGLTF("/connector.glb");
-  const stencil = useMask(1);
-  const maskRef = useRef<THREE.Mesh>();
+// const Text2 = () => {
+//   const scroll = useScroll();
+//   const { viewport, gl, camera } = useThree();
+//   const { width, height } = viewport.getCurrentViewport(camera, [0, 0, 10]);
+//   const connectorRef = useRef<THREE.Mesh>();
+//   const { nodes, materials } = useGLTF("/connector.glb");
+//   const stencil = useMask(1);
+//   const maskRef = useRef<THREE.Mesh>();
 
-  useFrame((state, delta) => {
-    //easing.dampE(ref.current.rotation, [], 0.2, delta)
-    connectorRef.current.rotation.z += delta / 6;
-    connectorRef.current.rotation.y += delta / 6;
+//   useFrame((state, delta) => {
+//     //easing.dampE(ref.current.rotation, [], 0.2, delta)
+//     connectorRef.current.rotation.z += delta / 6;
+//     connectorRef.current.rotation.y += delta / 6;
 
-    // console.log(scroll.delta);
-    const scale = Math.pow(1 + scroll.offset, 2); //* (1 + scroll.offset);
-    //console.log(scale);
-    //maskRef.current.scale.set(scale, scale, scale);
-  });
-
-  const clampedFontSize = THREE.MathUtils.clamp(width / 8, 0.6, 0.8);
-  //console.log("clamped:", clampedFontSize);
-
-  return (
-    <group position={[0, -height * 4, 0]}>
-      <Mask id={1} ref={maskRef} position={[0, 0, 0.95]}>
-        <circleGeometry args={[100, 64]} />
-      </Mask>
-
-      <Circle args={[THREE.MathUtils.clamp(width / 2, 5, 10), 64]} position={[0, 0, -1]}>
-        <meshBasicMaterial color="black" {...stencil} />
-      </Circle>
-
-      <Text
-        font="/GeistMono-Regular.woff"
-        anchorX="center"
-        maxWidth={width / 1.5}
-        fontSize={clampedFontSize}
-      >
-        I like creating stunning visuals and great user experiences.
-        <meshBasicMaterial color="white" {...stencil} />
-      </Text>
-
-      <mesh
-        ref={connectorRef}
-        receiveShadow
-        scale={12}
-        //@ts-expect-error
-        geometry={nodes.connector.geometry}
-        position={[width / 2.5, -3, 1]}
-      >
-        <meshStandardMaterial
-          envMapIntensity={1}
-          color="springgreen"
-          roughness={0} /* map={materials.base.map}  */
-        />
-        {/* <MeshTransmissionMaterial
-          clearcoat={1}
-          thickness={0.1}
-          anisotropicBlur={0.1}
-          chromaticAberration={0.1}
-          samples={8}
-          resolution={512}
-        /> */}
-      </mesh>
-    </group>
-  );
-};
-
-// function Geometry({ r, position, ...props }) {
-//   const ref = useRef<THREE.Group>();
-//   useFrame((state) => {
-//     ref.current.rotation.x = ref.current.rotation.y = ref.current.rotation.z += 0.004 * r;
-//     ref.current.position.y =
-//       position[1] + Math[r > 0.5 ? "cos" : "sin"](state.clock.getElapsedTime() * r) * r;
+//     // console.log(scroll.delta);
+//     const scale = Math.pow(1 + scroll.offset, 2); //* (1 + scroll.offset);
+//     //console.log(scale);
+//     //maskRef.current.scale.set(scale, scale, scale);
 //   });
+
+//   const clampedFontSize = THREE.MathUtils.clamp(width / 8, 0.6, 0.8);
+//   //console.log("clamped:", clampedFontSize);
+
 //   return (
-//     <group position={position} ref={ref}>
-//       <mesh {...props} />
+//     <group position={[0, -height * 4, 0]}>
+//       <Mask id={1} ref={maskRef} position={[0, 0, 0.95]}>
+//         <circleGeometry args={[100, 64]} />
+//       </Mask>
+
+//       <Circle args={[THREE.MathUtils.clamp(width / 2, 5, 10), 64]} position={[0, 0, -1]}>
+//         <meshBasicMaterial color="black" {...stencil} />
+//       </Circle>
+
+//       <Text
+//         font="/GeistMono-Regular.woff"
+//         anchorX="center"
+//         maxWidth={width / 1.5}
+//         fontSize={clampedFontSize}
+//       >
+//         I like creating stunning visuals and great user experiences.
+//         <meshBasicMaterial color="white" {...stencil} />
+//       </Text>
+
+//       <mesh
+//         ref={connectorRef}
+//         receiveShadow
+//         scale={12}
+//         //@ts-expect-error
+//         geometry={nodes.connector.geometry}
+//         position={[width / 2.5, -3, 1]}
+//       >
+//         <meshStandardMaterial
+//           envMapIntensity={1}
+//           color="springgreen"
+//           roughness={0} /* map={materials.base.map}  */
+//         />
+//         {/* <MeshTransmissionMaterial
+//           clearcoat={1}
+//           thickness={0.1}
+//           anisotropicBlur={0.1}
+//           chromaticAberration={0.1}
+//           samples={8}
+//           resolution={512}
+//         /> */}
+//       </mesh>
 //     </group>
 //   );
-// }
+// };
 
-// function Geometries() {
-//   const { items, material } = useStore();
-//   const transition = useTransition(items, {
-//     from: { scale: [0, 0, 0], rotation: [0, 0, 0] },
-//     enter: ({ r }) => ({ scale: [1, 1, 1], rotation: [r * 3, r * 3, r * 3] }),
-//     leave: { scale: [0.1, 0.1, 0.1], rotation: [0, 0, 0] },
-//     config: { mass: 5, tension: 1000, friction: 100 },
-//     trail: 100,
-//   });
-//   return transition((props, { position: [x, y, z], r, geometry }) => (
-//     <Geometry
-//       position={[x * 3, y * 3, z]}
-//       material={material}
-//       geometry={geometry}
-//       r={r}
-//       {...props}
-//     />
-//   ));
-// }
+// // function Geometry({ r, position, ...props }) {
+// //   const ref = useRef<THREE.Group>();
+// //   useFrame((state) => {
+// //     ref.current.rotation.x = ref.current.rotation.y = ref.current.rotation.z += 0.004 * r;
+// //     ref.current.position.y =
+// //       position[1] + Math[r > 0.5 ? "cos" : "sin"](state.clock.getElapsedTime() * r) * r;
+// //   });
+// //   return (
+// //     <group position={position} ref={ref}>
+// //       <mesh {...props} />
+// //     </group>
+// //   );
+// // }
 
-// prettier-ignore
-const items = [
-    { position: [0.25, 1.8, -6], r: 0.5, geometry: new THREE.SphereGeometry(1, 32, 32) },
-    { position: [-1.5, 0, 2], r: 0.2, geometry: new THREE.TetrahedronGeometry(2) },
-    { position: [1, -0.75, 4], r: 0.3, geometry: new THREE.CylinderGeometry(0.8, 0.8, 2, 32) },
-    { position: [-0.7, 0.5, 6], r: 0.4, geometry: new THREE.ConeGeometry(1.1, 1.7, 32) },
-    { position: [0.5, -1.2, -6], r: 0.9, geometry: new THREE.SphereGeometry(1.5, 32, 32) },
-    { position: [-0.5, 2.5, -2], r: 0.6, geometry: new THREE.IcosahedronGeometry(2) },
-    { position: [-0.8, -0.75, 3], r: 0.35, geometry: new THREE.TorusGeometry(1.1, 0.35, 16, 32) },
-    { position: [1.5, 0.5, -2], r: 0.8, geometry: new THREE.OctahedronGeometry(2) },
-    { position: [-1, -0.5, -6], r: 0.5, geometry: new THREE.SphereGeometry(1.5, 32, 32) },
-    { position: [1, 1.9, -1], r: 0.2, geometry: new THREE.BoxGeometry(2.5, 2.5, 2.5) },
-  ];
+// // function Geometries() {
+// //   const { items, material } = useStore();
+// //   const transition = useTransition(items, {
+// //     from: { scale: [0, 0, 0], rotation: [0, 0, 0] },
+// //     enter: ({ r }) => ({ scale: [1, 1, 1], rotation: [r * 3, r * 3, r * 3] }),
+// //     leave: { scale: [0.1, 0.1, 0.1], rotation: [0, 0, 0] },
+// //     config: { mass: 5, tension: 1000, friction: 100 },
+// //     trail: 100,
+// //   });
+// //   return transition((props, { position: [x, y, z], r, geometry }) => (
+// //     <Geometry
+// //       position={[x * 3, y * 3, z]}
+// //       material={material}
+// //       geometry={geometry}
+// //       r={r}
+// //       {...props}
+// //     />
+// //   ));
+// // }
+
+// // prettier-ignore
+// const items = [
+//     { position: [0.25, 1.8, -6], r: 0.5, geometry: new THREE.SphereGeometry(1, 32, 32) },
+//     { position: [-1.5, 0, 2], r: 0.2, geometry: new THREE.TetrahedronGeometry(2) },
+//     { position: [1, -0.75, 4], r: 0.3, geometry: new THREE.CylinderGeometry(0.8, 0.8, 2, 32) },
+//     { position: [-0.7, 0.5, 6], r: 0.4, geometry: new THREE.ConeGeometry(1.1, 1.7, 32) },
+//     { position: [0.5, -1.2, -6], r: 0.9, geometry: new THREE.SphereGeometry(1.5, 32, 32) },
+//     { position: [-0.5, 2.5, -2], r: 0.6, geometry: new THREE.IcosahedronGeometry(2) },
+//     { position: [-0.8, -0.75, 3], r: 0.35, geometry: new THREE.TorusGeometry(1.1, 0.35, 16, 32) },
+//     { position: [1.5, 0.5, -2], r: 0.8, geometry: new THREE.OctahedronGeometry(2) },
+//     { position: [-1, -0.5, -6], r: 0.5, geometry: new THREE.SphereGeometry(1.5, 32, 32) },
+//     { position: [1, 1.9, -1], r: 0.2, geometry: new THREE.BoxGeometry(2.5, 2.5, 2.5) },
+//   ];
 
 // const CustomGrid = ({ number = 23, lineWidth = 0.026 }) => {
 //   const { viewport, gl, camera } = useThree();
@@ -490,10 +435,9 @@ const items = [
 // };
 
 const Ground = () => {
-  const { viewport, gl, camera } = useThree();
+  const { viewport, camera } = useThree();
   const { width, height } = viewport.getCurrentViewport(camera, [0, 0, 10]);
-  const [planeRef, api] = usePlane(() => ({}));
-  const ref = useRef();
+  const ref = useRef(null);
 
   // Log the bounding box dimensions when the component mounts
   useEffect(() => {
@@ -537,12 +481,9 @@ const Ground = () => {
 const BigText = () => {
   const isSmallScreen = window.matchMedia("(max-width: 1000px)").matches;
   const text = isSmallScreen ? "ANDRAS\nLASSU" : "ANDRAS LASSU";
-  const fontSize = isSmallScreen ? 2 : 2.6;
   const textRef = useRef<THREE.Group>();
-  const { viewport, gl, camera } = useThree();
+  const { viewport } = useThree();
   const { width } = viewport;
-
-  //console.log("viewport width:", width);
 
   return (
     <Text
@@ -583,7 +524,7 @@ const baubleMaterial = new THREE.MeshStandardMaterial({
   envMapIntensity: 1,
 });
 
-const Clump = ({ mat = new THREE.Matrix4(), vec = new THREE.Vector3(), ...props }) => {
+const Clump = ({ mat = new THREE.Matrix4(), vec = new THREE.Vector3() }) => {
   const BALL_COUNT = 10;
   const force = useSceneStore((s) => s.force);
   const texture = useTexture("/cross.jpg");
@@ -594,10 +535,10 @@ const Clump = ({ mat = new THREE.Matrix4(), vec = new THREE.Vector3(), ...props 
     linearDamping: 0.65,
     position: [rfs(20), rfs(20), rfs(20)],
   }));
-  useFrame((state) => {
+  useFrame(() => {
     for (let i = 0; i < BALL_COUNT; i++) {
       // Get current whereabouts of the instanced sphere
-      ref.current.getMatrixAt(i, mat);
+      ref.current?.getMatrixAt(i, mat);
       // Normalize the position and multiply by a negative force.
       // This is enough to drive it towards the center-point.
       api
