@@ -419,7 +419,7 @@ const Ground = () => {
     <group position={[0, -height * 3.4, 0]}>
       <Text3D
         ref={ref}
-        font="/MajorMonoDisplay-Regular.json"
+        font="/fonts/MajorMonoDisplay/MajorMonoDisplay-Regular.json"
         castShadow
         //rotation={[-Math.PI / 2, 0, 0]}
         position={[-7.55, -4.45, 0]}
@@ -453,7 +453,7 @@ const BigText = () => {
   return (
     <Text
       ref={textRef}
-      font={"/MajorMonoDisplay-Regular.woff"}
+      font={"/fonts/MajorMonoDisplay/MajorMonoDisplay-Regular.woff"}
       fontSize={Math.max(1.2, width / 10)}
       letterSpacing={-0.025}
       color="black"

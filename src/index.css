@@ -17,6 +17,14 @@
   scrollbar-width: thin;
 }
 
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/GeistMono/GeistMonoVariableVF.woff2") format("woff2-variations");
+  font-weight: 125 950;
+  font-stretch: 75% 125%;
+  font-style: normal;
+}
+
 ::selection {
   background-color: var(--color-black);
   color: var(--color-bg);
@@ -30,7 +38,7 @@ body {
 }
 
 body {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Geist", monospace;
   background-color: var(--color-bg);
 }
 
