@@ -402,18 +402,16 @@ const Boxes = () => {
 const Ground = () => {
   const { viewport, camera } = useThree();
   const { width, height } = viewport.getCurrentViewport(camera, [0, 0, 10]);
-  const ref = useRef(null);
+  const ref = useRef<THREE.Mesh>(null);
 
   // Log the bounding box dimensions when the component mounts
   useEffect(() => {
     if (ref.current) {
       const boundingBox = new THREE.Box3().setFromObject(ref.current);
       const size = boundingBox.getSize(new THREE.Vector3());
-      console.log("Bounding box size:", size);
+      ref.current.position.setX((-1 * size.x) / 2);
     }
   }, []);
-
-  console.log("width:", width);
 
   return (
     <group position={[0, -height * 3.4, 0]}>
@@ -422,7 +420,8 @@ const Ground = () => {
         font="/fonts/MajorMonoDisplay/MajorMonoDisplay-Regular.json"
         castShadow
         //rotation={[-Math.PI / 2, 0, 0]}
-        position={[-7.55, -4.45, 0]}
+        //position={[-7.55, -4.45, 0]}
+        position={[0, -4.45, 0]}
         height={0.5}
         letterSpacing={0.2}
         size={1.2}
