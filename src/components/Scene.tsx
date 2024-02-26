@@ -1,5 +1,6 @@
 import { Physics, useSphere } from "@react-three/cannon";
 import {
+  Capsule,
   Environment,
   Grid,
   Html,
@@ -8,6 +9,7 @@ import {
   ScrollControls,
   Text,
   Text3D,
+  Torus,
   useProgress,
   useTexture,
 } from "@react-three/drei";
@@ -159,45 +161,39 @@ const Boxes = () => {
   const { height } = state.viewport;
 
   useFrame((state, delta) => {
-    box1Ref.current!.rotation.z += delta / 5;
+    box1Ref.current!.rotation.x += delta / 5;
     box2Ref.current!.rotation.z += delta / 7;
-    box3Ref.current!.rotation.z -= delta / 6;
+    box3Ref.current!.rotation.z -= delta / 7;
   });
 
   return (
     <group position={[0, -height, 0.5]}>
-      <instancedMesh>
-        <RoundedBox
-          radius={0.4}
-          smoothness={8}
-          ref={box1Ref}
-          args={[2, 2, 2]}
-          rotation={[0.6, 1.1, 0.5]}
-          position={[-8, 2, -3]}
-        >
-          <meshStandardMaterial roughness={0} envMapIntensity={1} />
-        </RoundedBox>
-        <RoundedBox
-          radius={0.5}
-          smoothness={8}
-          ref={box2Ref}
-          args={[5, 5, 5]}
-          rotation={[0.4, 0.1, 1.1]}
-          position={[0, 0, -5]}
-        >
-          <meshStandardMaterial roughness={0} envMapIntensity={1} />
-        </RoundedBox>
-        <RoundedBox
-          radius={0.4}
-          smoothness={8}
-          ref={box3Ref}
-          args={[2, 2, 2]}
-          rotation={[-0.4, 0.2, 2.1]}
-          position={[7, -4, -3]}
-        >
-          <meshStandardMaterial roughness={0} envMapIntensity={1} />
-        </RoundedBox>
-      </instancedMesh>
+      <RoundedBox
+        radius={0.5}
+        smoothness={8}
+        ref={box2Ref}
+        args={[5, 5, 5]}
+        rotation={[0.4, 0.1, 1.1]}
+        position={[0, 0, -5]}
+      >
+        <meshStandardMaterial roughness={0} envMapIntensity={1} />
+      </RoundedBox>
+      <Torus
+        ref={box1Ref}
+        args={[1, 0.5, 16, 30]}
+        rotation={[6, 2.8, 0.5]}
+        position={[-8, 2, -3]}
+      >
+        <meshStandardMaterial roughness={0} envMapIntensity={1} />
+      </Torus>
+      <Capsule
+        args={[1, 1.5, 14, 20]}
+        ref={box3Ref}
+        rotation={[-0.4, 0.2, 2.1]}
+        position={[7, -4, -3]}
+      >
+        <meshStandardMaterial roughness={0} envMapIntensity={1} />
+      </Capsule>
     </group>
   );
 };
