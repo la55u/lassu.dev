@@ -22,6 +22,7 @@ import {
   GitHubLogoIcon,
   LinkedInLogoIcon,
 } from "@radix-ui/react-icons";
+import { isMobileSize } from "../utils/helpers";
 
 extend({ RoundedPlaneGeometry: geometry.RoundedPlaneGeometry });
 
@@ -104,8 +105,6 @@ export const Scene = () => {
             <Scroll>
               <Boxes />
             </Scroll>
-
-            {/*             <Text2 />           */}
 
             <Scroll>
               <Ground />
@@ -205,7 +204,7 @@ const Boxes = () => {
 
 const Ground = () => {
   const { viewport, camera } = useThree();
-  const { width, height } = viewport.getCurrentViewport(camera, [0, 0, 10]);
+  const { height } = viewport.getCurrentViewport(camera, [0, 0, 10]);
   const ref = useRef<THREE.Mesh>(null);
 
   // Log the bounding box dimensions when the component mounts
@@ -247,8 +246,8 @@ const Ground = () => {
 };
 
 const BigText = () => {
-  const isSmallScreen = window.matchMedia("(max-width: 1000px)").matches;
-  const text = isSmallScreen ? "ANDRAS\nLASSU" : "ANDRAS LASSU";
+  const isMobile = isMobileSize(1000);
+  const text = isMobile ? "ANDRAS\nLASSU" : "ANDRAS LASSU"; // TODO this shouldn't be necessary but the centering is off if \n is not there
   const { viewport } = useThree();
   const { width } = viewport;
 
@@ -291,7 +290,8 @@ const baubleMaterial = new THREE.MeshStandardMaterial({
 });
 
 const Clump = ({ mat = new THREE.Matrix4(), vec = new THREE.Vector3() }) => {
-  const BALL_COUNT = 10;
+  const isMobile = isMobileSize();
+  const BALL_COUNT = isMobile ? 5 : 10;
   const force = useSceneStore((s) => s.force);
   const texture = useTexture("/cross.jpg");
   const [ref, api] = useSphere<THREE.InstancedMesh>(() => ({
