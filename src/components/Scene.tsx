@@ -76,18 +76,25 @@ export const Scene = () => {
               <section className="contact-container">
                 <a
                   target="_blank"
+                  rel="noopener noreferrer"
                   href="https://www.linkedin.com/in/andras-lassu-866209a4/"
                 >
                   <LinkedInLogoIcon width={50} height={50} />
                   LinkedIn
                 </a>
-
-                <a target="_blank" href="https://github.com/la55u">
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://github.com/la55u"
+                >
                   <GitHubLogoIcon width={50} height={50} />
                   GitHub
                 </a>
-
-                <a target="_blank" href="mailto:andras.lassu@gmail.com">
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="mailto:andras.lassu@gmail.com"
+                >
                   <EnvelopeClosedIcon width={50} height={50} />
                   E-mail
                 </a>
