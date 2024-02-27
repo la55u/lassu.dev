@@ -181,7 +181,7 @@ nav {
     width: 800px;
     max-width: 100vw;
     font-size: clamp(1.5rem, 1.3463rem + 0.6829vw, 2.2rem);
-    padding: 0 20px;
+    padding: 0 1rem;
   }
 
   @supports (initial-letter: 2) {
@@ -192,6 +192,32 @@ nav {
   }
 }
 
+.github-stats {
+  position: absolute;
+  top: 220vh;
+  margin: 0 auto;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  padding: 0 1rem;
+
+  & h2 {
+    font-size: clamp(1.5rem, 1.1053rem + 1.5789vw, 3rem);
+  }
+  & ul {
+    padding: 2rem 0 2rem 2rem;
+    list-style-type: "> ";
+    font-size: clamp(1rem, 0.8684rem + 0.5263vw, 1.5rem);
+  }
+  & .updated {
+    font-size: 0.8rem;
+    color: gray;
+    font-style: italic;
+    font-synthesis: style;
+    padding-top: 10px;
+  }
+}
+
 .contact-container {
   display: flex;
   justify-content: center;
@@ -199,7 +225,7 @@ nav {
   width: 100vw;
   height: 100vh;
   position: absolute;
-  top: 200vh;
+  top: 240vh;
   gap: 16px 50px;
   padding: 0 2rem;
 
@@ -218,6 +244,10 @@ nav {
 }
 
 @media screen and (max-width: 500px) {
+  .github-stats .ago {
+    display: none;
+  }
+
   .contact-container {
     flex-direction: column;
     align-items: flex-start;

@@ -24,7 +24,8 @@ import {
   GitHubLogoIcon,
   LinkedInLogoIcon,
 } from "@radix-ui/react-icons";
-import { isMobileSize } from "../utils/helpers";
+import { isMobileSize, timeAgo } from "../utils/helpers";
+import ghStat from "../../github_stats.json"; // generated during deploy
 
 extend({ RoundedPlaneGeometry: geometry.RoundedPlaneGeometry });
 
@@ -60,7 +61,7 @@ export const Scene = () => {
         />
 
         <Physics gravity={[0, gravity, 0]} iterations={10}>
-          <ScrollControls pages={3} damping={0.2}>
+          <ScrollControls pages={3.4} damping={0.2}>
             <Scroll>
               <TopScene />
             </Scroll>
@@ -102,10 +103,44 @@ export const Scene = () => {
                   E-mail
                 </a>
               </section>
+
+              <section className="github-stats">
+                <div>
+                  <h2>I love open-source</h2>
+                  <ul>
+                    <li>Issues opened: {ghStat.issuesOpened}</li>
+                    <li>
+                      PRs (merged/total): {ghStat.pullRequestsMerged}/
+                      {ghStat.pullRequestsOpened}
+                    </li>
+                    <li>Comments: {ghStat.commentsOnIssues}</li>
+                    <li>Commits: {ghStat.totalCommits}</li>
+                    <li>Public repos: {ghStat.publicRepoCount}</li>
+                    <li>Stars: {ghStat.totalStars}</li>
+                    <li>Followers: {ghStat.followers}</li>
+                    <li>
+                      Registered: {new Date(ghStat.registeredDate).toLocaleDateString()}
+                      <span className="ago"> ({timeAgo(ghStat.registeredDate)})</span>
+                    </li>
+                    <li>
+                      First PR:{" "}
+                      {new Date(ghStat.firstPullRequestDate).toLocaleDateString()}
+                      <span className="ago">
+                        {" "}
+                        ({timeAgo(ghStat.firstPullRequestDate)})
+                      </span>
+                    </li>
+                    <li>Sponsored: {ghStat.sponsoredAccounts} accounts</li>
+                  </ul>
+                  <div className="updated">
+                    Updated: {new Date(ghStat.statUpdated).toLocaleDateString()}
+                  </div>
+                </div>
+              </section>
             </Scroll>
 
             <Scroll>
-              <Boxes />
+              <FloatingShapes />
             </Scroll>
 
             <Scroll>
@@ -146,14 +181,14 @@ function Loader() {
 const TopScene = () => {
   return (
     <>
-      <BigText />
+      <BannerText />
       <Pointer />
       <Clump />
     </>
   );
 };
 
-const Boxes = () => {
+const FloatingShapes = () => {
   const state = useThree();
   const box1Ref = useRef<THREE.Mesh>(null);
   const box2Ref = useRef<THREE.Mesh>(null);
@@ -200,7 +235,7 @@ const Boxes = () => {
 
 const Ground = () => {
   const { viewport, camera } = useThree();
-  const { height } = viewport.getCurrentViewport(camera, [0, 0, 10]);
+  const { height } = viewport.getCurrentViewport(camera, [0, 0, 0]);
   const ref = useRef<THREE.Mesh>(null);
 
   // Log the bounding box dimensions when the component mounts
@@ -212,8 +247,12 @@ const Ground = () => {
     }
   }, []);
 
+  if (isMobileSize()) return <></>;
+
+  console.log(height);
+
   return (
-    <group position={[0, -height * 3.4, 0]}>
+    <group position={[0, -height * 2.2, 0]}>
       <Text3D
         ref={ref}
         font="/fonts/MajorMonoDisplay/MajorMonoDisplay-Regular.json"
@@ -241,7 +280,7 @@ const Ground = () => {
   );
 };
 
-const BigText = () => {
+const BannerText = () => {
   const isMobile = isMobileSize(1000);
   const text = isMobile ? "ANDRAS\nLASSU" : "ANDRAS LASSU"; // TODO this shouldn't be necessary but the centering is off if \n is not there
   const { viewport } = useThree();
