@@ -1,23 +1,39 @@
 import fs from "fs";
 
-console.log("env:", process.env.VERCEL_ENV);
-
 const accessToken = process.env.GITHUB_ACCESS_TOKEN;
 const username = "la55u";
 
-const headers = {
-  Authorization: `Bearer ${accessToken}`,
-  "User-Agent": "Node.js",
-};
+/**
+ * Fetches a GitHub API URL
+ * @param {string} path The URL to fetch
+ * @returns {object} Response JSON object
+ */
+async function getUrl(path) {
+  try {
+    const response = await fetch(`https://api.github.com/` + path, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: "application/vnd.github+json",
+        "User-Agent": "Node.js",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    });
+    if (!response.ok) {
+      // parse error body
+      const err = await response.json();
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error(`Error fetching path \`${path}\``, { cause: error });
+  }
+}
 
 async function fetchData() {
   try {
     // Fetch repositories contributed to
-    const reposResponse = await fetch(
-      `https://api.github.com/users/${username}/repos?type=all&per_page=100`,
-      { headers }
-    );
-    const repositories = await reposResponse.json();
+    const repositories = await getUrl(`users/${username}/repos?type=all&per_page=100`);
 
     let totalStars = 0;
     repositories.forEach((repo) => {
@@ -27,50 +43,33 @@ async function fetchData() {
     // Calculate total commits count
     let totalCommits = 0;
     for (const repo of repositories) {
-      const commitsResponse = await fetch(
-        `https://api.github.com/repos/${username}/${repo.name}/commits`,
-        { headers }
-      );
-      const commitsData = await commitsResponse.json();
+      const commitsData = await getUrl(`repos/${username}/${repo.name}/commits`);
       totalCommits += commitsData.length;
     }
 
     // Fetch issues opened
-    const issuesResponse = await fetch(
-      `https://api.github.com/search/issues?q=author:${username}+type:issue`,
-      { headers }
-    );
-    const issuesData = await issuesResponse.json();
+    const issuesData = await getUrl(`search/issues?q=author:${username}+type:issue`);
     const issuesOpened = issuesData.total_count;
 
     // Fetch merge requests (pull requests) opened
-    const pullRequestsResponse = await fetch(
-      `https://api.github.com/search/issues?q=author:${username}+type:pr&sort=created&order=asc`,
-      { headers }
+    const prs = await getUrl(
+      `search/issues?q=author:${username}+type:pr&sort=created&order=asc`
     );
-    const pullRequestsData = await pullRequestsResponse.json();
-    const pullRequestsOpened = pullRequestsData.total_count;
-    const firstPullRequestDate = pullRequestsData.items[0].created_at;
+    const pullRequestsOpened = prs.total_count;
+    const firstPullRequestDate = prs.items[0].created_at;
 
     // Fetch merge requests merged
-    const mergedPullRequestsResponse = await fetch(
-      `https://api.github.com/search/issues?q=author:${username}+type:pr+is:merged`,
-      { headers }
+    const mergedPRs = await getUrl(
+      `search/issues?q=author:${username}+type:pr+is:merged`
     );
-    const mergedPullRequestsData = await mergedPullRequestsResponse.json();
-    const pullRequestsMerged = mergedPullRequestsData.total_count;
+    const pullRequestsMerged = mergedPRs.total_count;
 
     // Fetch comments made on issues
-    const commentsOnIssuesResponse = await fetch(
-      `https://api.github.com/search/issues?q=commenter:${username}`,
-      { headers }
-    );
-    const commentsOnIssuesData = await commentsOnIssuesResponse.json();
+    const commentsOnIssuesData = await getUrl(`search/issues?q=commenter:${username}`);
     const commentsOnIssues = commentsOnIssuesData.total_count;
 
     // Fetch user data
-    const userResponse = await fetch(`https://api.github.com/user`, { headers });
-    const userData = await userResponse.json();
+    const userData = await getUrl(`user`);
 
     const registeredDate = userData.created_at;
     const publicRepoCount = userData.public_repos;
@@ -96,7 +95,7 @@ async function fetchData() {
     fs.writeFileSync("github_stats.json", JSON.stringify(data, null, 2));
     console.log("Data has been written to github_stats.json");
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Something went wrong:", error);
   }
 }
 

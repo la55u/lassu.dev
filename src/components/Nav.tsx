@@ -1,6 +1,9 @@
 import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { useGlobalStore } from "../utils/store";
 
 export const Nav = () => {
+  const setNav = useGlobalStore((s) => s.setNav);
+
   return (
     <nav>
       <a className="logo" href="#">
@@ -10,22 +13,27 @@ export const Nav = () => {
 
       <ul className="nav-links">
         <li>
-          <NavLink href="#about">About</NavLink>
+          <NavLink onClick={() => setNav("about")}>About</NavLink>
         </li>
         <li>
-          <NavLink href="#contact">Contact</NavLink>
+          <NavLink onClick={() => setNav("contact")}>Contact</NavLink>
         </li>
       </ul>
     </nav>
   );
 };
 
-const NavLink = ({ href, children }: { href: string; children: string }) => {
+const NavLink = ({ children, onClick }: { children: string; onClick: () => void }) => {
   return (
-    <a className="nav-link" href={href}>
+    <button
+      role="link"
+      aria-label={`Scroll to the ${children} section`}
+      className="nav-link"
+      onClick={onClick}
+    >
       <span className="dot"></span>
       <span className="text">{children}</span>
       <ArrowRightIcon className="arrow" />
-    </a>
+    </button>
   );
 };

@@ -1,3 +1,8 @@
+import {
+  EnvelopeClosedIcon,
+  GitHubLogoIcon,
+  LinkedInLogoIcon,
+} from "@radix-ui/react-icons";
 import { Physics, useSphere } from "@react-three/cannon";
 import {
   Capsule,
@@ -11,6 +16,7 @@ import {
   Text3D,
   Torus,
   useProgress,
+  useScroll,
   useTexture,
 } from "@react-three/drei";
 import { Canvas, Object3DNode, extend, useFrame, useThree } from "@react-three/fiber";
@@ -18,14 +24,9 @@ import { EffectComposer, N8AO, SMAA, TiltShift2 } from "@react-three/postprocess
 import { easing, geometry } from "maath";
 import { Suspense, useEffect, useRef } from "react";
 import * as THREE from "three";
-import { useSceneStore } from "../utils/store";
-import {
-  EnvelopeClosedIcon,
-  GitHubLogoIcon,
-  LinkedInLogoIcon,
-} from "@radix-ui/react-icons";
-import { isMobileSize, timeAgo } from "../utils/helpers";
 import ghStat from "../../github_stats.json"; // generated during deploy
+import { isMobileSize, timeAgo } from "../utils/helpers";
+import { useGlobalStore } from "../utils/store";
 
 extend({ RoundedPlaneGeometry: geometry.RoundedPlaneGeometry });
 
@@ -39,8 +40,6 @@ declare module "@react-three/fiber" {
 }
 
 export const Scene = () => {
-  const gravity = useSceneStore((s) => s.gravity);
-
   return (
     <Canvas
       shadows
@@ -60,94 +59,10 @@ export const Scene = () => {
           shadow-mapSize={[512, 512]}
         />
 
-        <Physics gravity={[0, gravity, 0]} iterations={10}>
-          <ScrollControls pages={3.4} damping={0.2}>
-            <Scroll>
-              <TopScene />
-            </Scroll>
-
-            <Scroll html>
-              <section className="about-container">
-                <p>
-                  Hello. I&apos;m Andras, a software developer from Budapest, Hungary. I
-                  usually build apps for the web and like to work on the frontend. I love
-                  a great UX, embrace clean code, standards, appreciate unique designs and
-                  simple solutions while working with modern and effective tools. I take
-                  pride in my work.
-                </p>
-              </section>
-
-              <section className="contact-container">
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://www.linkedin.com/in/andras-lassu-866209a4/"
-                >
-                  <LinkedInLogoIcon width={50} height={50} />
-                  LinkedIn
-                </a>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://github.com/la55u"
-                >
-                  <GitHubLogoIcon width={50} height={50} />
-                  GitHub
-                </a>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="mailto:andras.lassu@gmail.com"
-                >
-                  <EnvelopeClosedIcon width={50} height={50} />
-                  E-mail
-                </a>
-              </section>
-
-              <section className="github-stats">
-                <div>
-                  <h2>I love open-source</h2>
-                  <ul>
-                    <li>Issues opened: {ghStat.issuesOpened}</li>
-                    <li>
-                      PRs (merged/total): {ghStat.pullRequestsMerged}/
-                      {ghStat.pullRequestsOpened}
-                    </li>
-                    <li>Comments: {ghStat.commentsOnIssues}</li>
-                    <li>Commits: {ghStat.totalCommits}</li>
-                    <li>Public repos: {ghStat.publicRepoCount}</li>
-                    <li>Stars: {ghStat.totalStars}</li>
-                    <li>Followers: {ghStat.followers}</li>
-                    <li>
-                      Registered: {new Date(ghStat.registeredDate).toLocaleDateString()}
-                      <span className="ago"> ({timeAgo(ghStat.registeredDate)})</span>
-                    </li>
-                    <li>
-                      First PR:{" "}
-                      {new Date(ghStat.firstPullRequestDate).toLocaleDateString()}
-                      <span className="ago">
-                        {" "}
-                        ({timeAgo(ghStat.firstPullRequestDate)})
-                      </span>
-                    </li>
-                    <li>Sponsored: {ghStat.sponsoredAccounts} accounts</li>
-                  </ul>
-                  <div className="updated">
-                    Updated: {new Date(ghStat.statUpdated).toLocaleDateString()}
-                  </div>
-                </div>
-              </section>
-            </Scroll>
-
-            <Scroll>
-              <FloatingShapes />
-            </Scroll>
-
-            <Scroll>
-              <Ground />
-            </Scroll>
-          </ScrollControls>
-        </Physics>
+        <ScrollControls pages={3.4} damping={0.2}>
+          <ScrollContents />
+          <ScrollableHtml />
+        </ScrollControls>
 
         <Rig />
 
@@ -166,6 +81,102 @@ export const Scene = () => {
         </EffectComposer>
       </Suspense>
     </Canvas>
+  );
+};
+
+const ScrollableHtml = () => {
+  const scroll = useScroll();
+  const nav = useGlobalStore((s) => s.nav);
+
+  useEffect(() => {
+    if (!nav) return;
+    const el = document.getElementById(nav);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top;
+    console.log("top:", top);
+    scroll.el.scrollTo({ top: top, behavior: "smooth" });
+  }, [nav]);
+
+  return (
+    <Scroll html>
+      <section className="about-container">
+        <p id="about">
+          Hello. I&apos;m Andras, a software developer from Budapest, Hungary. I usually
+          build apps for the web and like to work on the frontend. I love a great UX,
+          embrace clean code, standards, appreciate unique designs and simple solutions
+          while working with modern and effective tools. I take pride in my work.
+        </p>
+      </section>
+
+      <section className="github-stats">
+        <div>
+          <h2>I love open-source</h2>
+          <ul>
+            <li>Issues opened: {ghStat.issuesOpened}</li>
+            <li>
+              PRs (merged/total): {ghStat.pullRequestsMerged}/{ghStat.pullRequestsOpened}
+            </li>
+            <li>Comments: {ghStat.commentsOnIssues}</li>
+            <li>Commits: {ghStat.totalCommits}</li>
+            <li>Public repos: {ghStat.publicRepoCount}</li>
+            <li>Stars: {ghStat.totalStars}</li>
+            <li>Followers: {ghStat.followers}</li>
+            <li>
+              Registered: {new Date(ghStat.registeredDate).toLocaleDateString()}
+              <span className="ago"> ({timeAgo(ghStat.registeredDate)})</span>
+            </li>
+            <li>
+              First PR: {new Date(ghStat.firstPullRequestDate).toLocaleDateString()}
+              <span className="ago"> ({timeAgo(ghStat.firstPullRequestDate)})</span>
+            </li>
+            <li>Sponsored: {ghStat.sponsoredAccounts} accounts</li>
+          </ul>
+          <div className="updated">
+            Updated: {new Date(ghStat.statUpdated).toLocaleDateString()}
+          </div>
+        </div>
+      </section>
+
+      <section className="contact-container">
+        <a
+          id="contact"
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.linkedin.com/in/andras-lassu-866209a4/"
+        >
+          <LinkedInLogoIcon width={50} height={50} />
+          LinkedIn
+        </a>
+        <a target="_blank" rel="noopener noreferrer" href="https://github.com/la55u">
+          <GitHubLogoIcon width={50} height={50} />
+          GitHub
+        </a>
+        <a target="_blank" rel="noopener noreferrer" href="mailto:andras.lassu@gmail.com">
+          <EnvelopeClosedIcon width={50} height={50} />
+          E-mail
+        </a>
+      </section>
+    </Scroll>
+  );
+};
+
+const ScrollContents = () => {
+  return (
+    <>
+      <Scroll>
+        <Physics iterations={10}>
+          <TopScene />
+        </Physics>
+      </Scroll>
+
+      <Scroll>
+        <FloatingShapes />
+      </Scroll>
+
+      <Scroll>
+        <Ground />
+      </Scroll>
+    </>
   );
 };
 
@@ -327,7 +338,7 @@ const baubleMaterial = new THREE.MeshStandardMaterial({
 const Clump = ({ mat = new THREE.Matrix4(), vec = new THREE.Vector3() }) => {
   const isMobile = isMobileSize();
   const BALL_COUNT = isMobile ? 5 : 10;
-  const force = useSceneStore((s) => s.force);
+  const force = -40;
   const texture = useTexture("/cross.jpg");
   const [ref, api] = useSphere<THREE.InstancedMesh>(() => ({
     args: [1],
