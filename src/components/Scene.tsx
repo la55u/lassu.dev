@@ -9,6 +9,7 @@ import {
   Environment,
   Grid,
   Html,
+  Preload,
   RoundedBox,
   Scroll,
   ScrollControls,
@@ -47,6 +48,11 @@ export const Scene = () => {
       dpr={[1, 1.5]}
       camera={{ position: [0, 0, 20], fov: 35, near: 1, far: 40 }}
     >
+      {/** This is a helper that pre-emptively makes threejs aware of all geometries, textures etc
+               By default threejs will only process objects if they are "seen" by the camera leading 
+               to jank as you scroll down. With <Preload> that's solved.  */}
+      <Preload />
+
       <color attach="background" args={["#dfdfdf"]} />
       <Suspense fallback={<Loader />}>
         <ambientLight intensity={0.5} />
