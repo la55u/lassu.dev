@@ -97,6 +97,11 @@ nav {
   will-change: transform;
   text-decoration: none;
   user-select: none;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  cursor: pointer;
 
   & .dot {
     display: inline-block;
