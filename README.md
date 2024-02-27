@@ -1,5 +1,7 @@
 # Andras Lassu's personal website
 
+![Banner image](https://raw.githubusercontent.com/la55u/lassu.dev/main/assets/banner.png)
+
 ## Stack
 
 - React
