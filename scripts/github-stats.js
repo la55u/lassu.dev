@@ -1,9 +1,9 @@
 import fs from "fs";
 
-console.log("env:", process.env.VERCEL_ENV);
-
-const accessToken = process.env.GITHUB_ACCESS_TOKEN;
+const accessToken = process.env.GITHUB_ACCESS_TOKEN.substring(0, 4);
 const username = "la55u";
+
+console.log("env:", accessToken);
 
 const headers = {
   Authorization: `Bearer ${accessToken}`,
