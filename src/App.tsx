@@ -1,11 +1,13 @@
 import { Nav } from "./components/Nav";
 import { Scene } from "./components/Scene";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   return (
     <>
       <Nav />
       <Scene />
+      <Analytics />
     </>
   );
 }
