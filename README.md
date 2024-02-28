@@ -6,7 +6,7 @@
 
 - React
 - Typescript
-- Three.js
+- Three.js (R3F)
 - Vite
 
 ## Local development
@@ -15,9 +15,17 @@
 npm run dev
 ```
 
+## Re-generate GitHub stats
+
+```bash
+npm run gh
+```
+
 ## TODOs
 
 - Add projects
 - Figure out why `Grid` at the bottom can't be reached by scroll sometimes
 
-Deployed with Vercel to [lassu.dev](https://lassu.dev)
+## Deployment
+
+Deployed with Vercel on each commit to https://lassu.dev
