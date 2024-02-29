@@ -1,7 +1,9 @@
 import {
   EnvelopeClosedIcon,
+  FileTextIcon,
   GitHubLogoIcon,
   LinkedInLogoIcon,
+  PersonIcon,
 } from "@radix-ui/react-icons";
 import { Physics, useSphere } from "@react-three/cannon";
 import {
@@ -144,6 +146,14 @@ const ScrollableHtml = () => {
       </section>
 
       <section className="contact-container">
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://cv-andras-lassu.vercel.app"
+        >
+          <FileTextIcon width={50} height={50} />
+          Open CV
+        </a>
         <a
           id="contact"
           target="_blank"
