@@ -3,7 +3,6 @@ import {
   FileTextIcon,
   GitHubLogoIcon,
   LinkedInLogoIcon,
-  PersonIcon,
 } from "@radix-ui/react-icons";
 import { Physics, useSphere } from "@react-three/cannon";
 import {
