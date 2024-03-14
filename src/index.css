@@ -212,7 +212,7 @@ nav {
   & ul {
     padding: 2rem 0 2rem 2rem;
     list-style-type: "> ";
-    font-size: clamp(1rem, 0.8684rem + 0.5263vw, 1.5rem);
+    font-size: clamp(1.5rem, 1.3463rem + 0.6829vw, 2.2rem);
   }
   & .updated {
     font-size: 0.8rem;
@@ -228,11 +228,20 @@ nav {
   justify-content: center;
   align-items: center;
   width: 100vw;
-  height: 100vh;
   position: absolute;
-  top: 240vh;
+  top: 295vh;
   gap: 16px 50px;
   padding: 0 2rem;
+
+  & .ring-outer-container {
+    position: relative;
+  }
+
+  & .ring-container {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
 
   & a {
     display: flex;

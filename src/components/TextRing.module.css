@@ -1,0 +1,32 @@
+.ring {
+  --radius: 5;
+  --font-size: 1;
+  position: relative;
+  /* border: 1px solid black; */
+  width: calc(var(--radius) * 2ch);
+  height: calc(var(--radius) * 2ch);
+  border-radius: 9999px;
+}
+
+.char {
+  font-weight: bold;
+  font-family: monospace;
+  text-transform: uppercase;
+  font-size: calc(var(--font-size, 2) * 1rem);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(calc(360deg / var(--total) * var(--index)))
+    translateY(calc(var(--radius, 5) * -1ch));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ring {
+    animation: spin 15s infinite linear;
+  }
+  @keyframes spin {
+    to {
+      rotate: -360deg;
+    }
+  }
+}

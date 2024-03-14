@@ -120,9 +120,7 @@ const ScrollableHtml = () => {
           <h2>I love open-source</h2>
           <ul>
             <li>Issues opened: {ghStat.issuesOpened}</li>
-            <li>
-              PRs (merged/total): {ghStat.pullRequestsMerged}/{ghStat.pullRequestsOpened}
-            </li>
+            <li>PRs merged: {ghStat.pullRequestsMerged}</li>
             <li>Comments: {ghStat.commentsOnIssues}</li>
             <li>Commits: {ghStat.totalCommits}</li>
             <li>Public repos: {ghStat.publicRepoCount}</li>
@@ -145,6 +143,7 @@ const ScrollableHtml = () => {
       </section>
 
       <section className="contact-container">
+        {/* <TextRing text="Open to work ✦ Open to work ✦ " /> */}
         <a
           target="_blank"
           rel="noopener noreferrer"
