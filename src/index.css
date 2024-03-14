@@ -200,7 +200,7 @@ nav {
 .github-stats {
   position: absolute;
   top: 220vh;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   width: 100vw;
   display: flex;
   justify-content: center;
