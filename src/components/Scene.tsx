@@ -1,6 +1,6 @@
 import {
   EnvelopeClosedIcon,
-  FileTextIcon,
+  //FileTextIcon,
   GitHubLogoIcon,
   LinkedInLogoIcon,
 } from "@radix-ui/react-icons";
