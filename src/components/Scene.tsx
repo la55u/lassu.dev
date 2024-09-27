@@ -144,6 +144,7 @@ const ScrollableHtml = () => {
 
       <section className="contact-container">
         {/* <TextRing text="Open to work ✦ Open to work ✦ " /> */}
+        {/*
         <a
           target="_blank"
           rel="noopener noreferrer"
@@ -152,6 +153,7 @@ const ScrollableHtml = () => {
           <FileTextIcon width={50} height={50} />
           Open CV
         </a>
+        */}
         <a
           id="contact"
           target="_blank"
