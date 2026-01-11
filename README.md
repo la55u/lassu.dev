@@ -21,10 +21,9 @@ npm run dev
 npm run gh
 ```
 
-## TODOs
+## Contributing
 
-- Add projects
-- Figure out why `Grid` at the bottom can't be reached by scroll sometimes
+Why would you do that?
 
 ## Deployment
 
