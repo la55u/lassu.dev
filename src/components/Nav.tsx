@@ -1,39 +1,29 @@
-import { ArrowRightIcon } from "@radix-ui/react-icons";
-import { useGlobalStore } from "../utils/store";
-
 export const Nav = () => {
-  const setNav = useGlobalStore((s) => s.setNav);
-
   return (
     <nav>
       <a className="logo" href="#">
-        {"/home/al # "}
+        {"➜ lassu.dev git:(main) "}
         <span className="blink">_</span>
       </a>
 
-      <ul className="nav-links">
-        <li>
-          <NavLink onClick={() => setNav("about")}>About</NavLink>
-        </li>
-        <li>
-          <NavLink onClick={() => setNav("contact")}>Contact</NavLink>
-        </li>
-      </ul>
+      <div className="nav-links">
+        <a
+          className="logo"
+          href="https://www.linkedin.com/in/la55u/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {"linkedin"}
+        </a>
+        <a
+          className="logo"
+          href="https://github.com/la55u"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {"github"}
+        </a>
+      </div>
     </nav>
-  );
-};
-
-const NavLink = ({ children, onClick }: { children: string; onClick: () => void }) => {
-  return (
-    <button
-      role="link"
-      aria-label={`Scroll to the ${children} section`}
-      className="nav-link"
-      onClick={onClick}
-    >
-      <span className="dot"></span>
-      <span className="text">{children}</span>
-      <ArrowRightIcon className="arrow" />
-    </button>
   );
 };
