@@ -15,12 +15,6 @@
 npm run dev
 ```
 
-## Re-generate GitHub stats
-
-```bash
-npm run gh
-```
-
 ## Contributing
 
 Why would you do that?
