@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
 import wasm from "vite-plugin-wasm";
@@ -9,7 +10,10 @@ export default defineConfig({
     alias: {
       // Use the non-compat Rapier build so the WASM ships as a separate
       // streamed asset instead of base64-inlined JS.
-      "@dimforge/rapier3d-compat": "@dimforge/rapier3d",
+      // See src/utils/rapier3d-compat.ts for the API shim.
+      "@dimforge/rapier3d-compat": fileURLToPath(
+        new URL("./src/utils/rapier3d-compat.ts", import.meta.url),
+      ),
     },
   },
   optimizeDeps: {

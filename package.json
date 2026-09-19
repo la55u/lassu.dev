@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@dimforge/rapier3d": "^0.20.0",
+    "@types/node": "^26.6.2",
     "@types/react": "~19.2.8",
     "@types/react-dom": "~19.2.7",
     "@types/three": "^0.186.0",
