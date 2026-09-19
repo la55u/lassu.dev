@@ -8,19 +8,14 @@ export const Nav = () => {
 
       <div className="nav-links">
         <a
-          className="logo"
+          className="nav-link"
           href="https://www.linkedin.com/in/la55u/"
           target="_blank"
           rel="noreferrer"
         >
           {"linkedin"}
         </a>
-        <a
-          className="logo"
-          href="https://github.com/la55u"
-          target="_blank"
-          rel="noreferrer"
-        >
+        <a className="nav-link" href="https://github.com/la55u" target="_blank" rel="noreferrer">
           {"github"}
         </a>
       </div>

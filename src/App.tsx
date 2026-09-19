@@ -1,41 +1,37 @@
-import { Nav } from "./components/Nav";
-import { Scene } from "./components/Scene";
 import { Analytics } from "@vercel/analytics/react";
+import { lazy, Suspense, useState } from "react";
+import { Nav } from "./components/Nav";
+
+const Scene = lazy(() => import("./components/Scene"));
+
+function hasWebGL() {
+  try {
+    const canvas = document.createElement("canvas");
+    return Boolean(
+      window.WebGL2RenderingContext && (canvas.getContext("webgl2") ?? canvas.getContext("webgl")),
+    );
+  } catch {
+    return false;
+  }
+}
 
 function App() {
+  const [webgl] = useState(hasWebGL);
+
   return (
     <>
+      <h1 className="sr-only">Andras Lassu — Software Engineer</h1>
       <Nav />
-      <Scene />
+      {webgl ? (
+        <Suspense fallback={null}>
+          <Scene />
+        </Suspense>
+      ) : (
+        <main className="static-hero">ANDRAS LASSU</main>
+      )}
       <Analytics />
     </>
   );
 }
 
 export default App;
-
-// const words = [
-//   "software engineer",
-//   "web developer",
-//   "OSS enthusiast",
-//   "tinkerer",
-//   "CSS enjoyer",
-//   "Javascript wizard",
-//   "frontend engineer",
-//   "OSS contributor",
-//   "creative developer",
-//   "CS degree owner",
-//   "Typescript lover",
-//   "Linux advocate",
-//   "React developer",
-//   "React Native developer",
-//   "team player",
-//   "Rust learner",
-//   "wannabe 3D developer",
-//   "coding mentor",
-//   "VSCode user",
-//   "Android user",
-//   "MTB rider",
-//   "cat owner",
-//   "coder",
-// ];
