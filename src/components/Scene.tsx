@@ -1,3 +1,4 @@
+import { Physics, useSphere } from "@react-three/cannon";
 import {
   Environment,
   Html,
@@ -8,9 +9,8 @@ import {
 } from "@react-three/drei";
 import { Canvas, ThreeElement, extend, useFrame, useThree } from "@react-three/fiber";
 import { EffectComposer, N8AO, SMAA, TiltShift2 } from "@react-three/postprocessing";
-import { BallCollider, Physics, RigidBody, type RapierRigidBody } from "@react-three/rapier";
 import { easing, geometry } from "maath";
-import { Suspense, useMemo, useRef, useState } from "react";
+import { Suspense, useState } from "react";
 import * as THREE from "three";
 
 import { useIsMobileSize, useIsTouch, usePrefersReducedMotion } from "../utils/helpers";
@@ -48,7 +48,7 @@ export default function Scene() {
           shadow-mapSize={[512, 512]}
         />
 
-        <Physics numSolverIterations={4}>
+        <Physics iterations={5}>
           <BannerText />
           <Pointer />
           <Clump />
@@ -126,75 +126,70 @@ const Rig = () => {
 
 const rfs = THREE.MathUtils.randFloatSpread;
 const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+const baubleMaterial = new THREE.MeshStandardMaterial({
+  color: "white",
+  roughness: 0,
+  envMapIntensity: 1,
+});
 
-const Clump = ({ vec = new THREE.Vector3() }) => {
+const Clump = ({ mat = new THREE.Matrix4(), vec = new THREE.Vector3() }) => {
   const isMobile = useIsMobileSize();
   const BALL_COUNT = isMobile ? 5 : 10;
   const force = -40;
   const texture = useTexture("/cross.jpg");
-  const balls = useRef<Array<RapierRigidBody | null>>([]);
-  const material = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: "white",
-        roughness: 0,
-        envMapIntensity: 1,
-        map: texture,
-      }),
-    [texture],
-  );
-
+  const [ref, api] = useSphere<THREE.InstancedMesh>(() => ({
+    args: [1],
+    mass: 1,
+    angularDamping: 0.1,
+    linearDamping: 0.65,
+    position: [rfs(20), rfs(20), rfs(20)],
+  }));
   useFrame(() => {
-    for (const ball of balls.current) {
-      if (!ball) continue;
+    for (let i = 0; i < BALL_COUNT; i++) {
+      // Get current whereabouts of the instanced sphere
+      ref.current?.getMatrixAt(i, mat);
       // Normalize the position and multiply by a negative force.
       // This is enough to drive it towards the center-point.
-      const { x, y, z } = ball.translation();
-      ball.addForce(vec.set(x, y, z).normalize().multiplyScalar(force), true);
+      api
+        .at(i)
+        .applyForce(
+          vec.setFromMatrixPosition(mat).normalize().multiplyScalar(force).toArray(),
+          [0, 0, 0],
+        );
     }
   });
-
   return (
-    <group key={BALL_COUNT}>
-      {Array.from({ length: BALL_COUNT }, (_, i) => (
-        <RigidBody
-          key={i}
-          ref={(body) => {
-            balls.current[i] = body;
-          }}
-          colliders={false}
-          mass={1}
-          angularDamping={0.1}
-          linearDamping={0.65}
-          position={[rfs(20), rfs(20), rfs(20)]}
-        >
-          <mesh geometry={sphereGeometry} material={material} castShadow receiveShadow />
-          <BallCollider args={[1]} />
-        </RigidBody>
-      ))}
-    </group>
+    <instancedMesh
+      key={BALL_COUNT}
+      ref={ref}
+      castShadow
+      receiveShadow
+      args={[sphereGeometry, baubleMaterial, BALL_COUNT]}
+      material-map={texture}
+    ></instancedMesh>
   );
 };
 
 function Pointer() {
   const isTouch = useIsTouch();
   const viewport = useThree((state) => state.viewport);
-  const ref = useRef<RapierRigidBody>(null);
+  const [ref, api] = useSphere<THREE.Mesh>(() => ({
+    type: "Kinematic",
+    args: [3],
+    position: [0, 0, 0],
+  }));
   useFrame((state) => {
     if (isTouch) return;
-    ref.current?.setNextKinematicTranslation({
-      x: (state.pointer.x * viewport.width) / 2,
-      y: (state.pointer.y * viewport.height) / 2,
-      z: 0,
-    });
+    api.position.set(
+      (state.pointer.x * viewport.width) / 2,
+      (state.pointer.y * viewport.height) / 2,
+      0,
+    );
   });
   return (
-    <RigidBody ref={ref} type="kinematicPosition" colliders={false} position={[0, 0, 0]}>
-      <mesh>
-        <sphereGeometry args={[0.2, 32, 32]} />
-        <meshBasicMaterial fog={false} depthTest={false} color="black" />
-      </mesh>
-      <BallCollider args={[3]} />
-    </RigidBody>
+    <mesh ref={ref}>
+      <sphereGeometry args={[0.2, 32, 32]} />
+      <meshBasicMaterial fog={false} depthTest={false} color="black" />
+    </mesh>
   );
 }
